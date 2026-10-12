@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 3, Pusat Keputusan SAW | Weba ERP</title>
+<style>
+/* Layout: kepala bergradasi biru berisi hasil evaluasi, strip bobot kriteria (sekaligus legenda), lalu tabel ranking kiri dan panel penjelasan kanan yang menempel saat digulir. */
+:root {
+    --font-body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", monospace;
+    --page: #f2f5fa;
+    --card: #ffffff;
+    --ink-1: #0b1a33;
+    --ink-2: #48566f;
+    --muted: #7a879e;
+    --line: #e1e7f0;
+    --blue-900: #0b2350;
+    --blue-800: #123f86;
+    --blue-600: #2a78d6;
+    --blue-50: #edf3fc;
+    --track: #e8eef7;
+    --critical: #d03b3b; --critical-bg: #fdecec; --critical-ink: #9c2121;
+    --warning: #c98500; --warning-bg: #fff6e0; --warning-ink: #7a5300;
+    --c1: #2a78d6; --c2: #eb6834; --c3: #1baf7a; --c4: #eda100; --c5: #e87ba4; --c6: #008300;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink-1); font: 14px/1.5 var(--font-body); -webkit-font-smoothing: antialiased; }
+.tnum, .mono { font-variant-numeric: tabular-nums; }
+.mono { font-family: var(--font-mono); }
+
+.appbar { height: 58px; background: #fff; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 18px; padding: 0 clamp(16px, 3vw, 36px); }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; }
+.mark { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #fff; font-size: 14px; background: linear-gradient(140deg, var(--blue-600), var(--blue-900)); }
+.crumbs { color: var(--muted); font-size: 13px; display: flex; gap: 8px; align-items: center; }
+.crumbs b { color: var(--ink-1); font-weight: 600; }
+.crumbs svg { width: 12px; height: 12px; }
+.appbar .sp { flex: 1; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--blue-50); color: var(--blue-800); font-weight: 700; font-size: 12px; }
+
+.wrap { padding: 22px clamp(16px, 3vw, 36px) 40px; }
+.head {
+    border-radius: 18px; padding: 24px 26px; color: #eaf2ff;
+    background:
+        radial-gradient(700px 260px at 100% 0%, rgba(110, 170, 245, .45), transparent 65%),
+        linear-gradient(120deg, #081a3c 0%, var(--blue-900) 35%, var(--blue-800) 70%, #1f69c4 100%);
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end;
+}
+.head .eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #9fbbe4; font-weight: 700; }
+.head h1 { margin: 6px 0 6px; font-size: clamp(22px, 2.6vw, 30px); font-weight: 800; letter-spacing: -.01em; }
+.head .meta { color: #b9cbe7; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; }
+.head .meta span { display: inline-flex; align-items: center; gap: 6px; }
+.head .meta i { width: 4px; height: 4px; border-radius: 50%; background: #6f93c7; display: none; }
+.winner { background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .16); border-radius: 14px; padding: 14px 18px; min-width: 250px; }
+.winner .k { font-size: 12px; color: #9fbbe4; font-weight: 600; }
+.winner .v { font-family: var(--font-mono); font-size: 17px; margin-top: 2px; }
+.winner .s { font-size: 30px; font-weight: 800; letter-spacing: -.01em; }
+.head-actions { display: flex; gap: 10px; margin-top: 14px; }
+.btn { border: 0; border-radius: 10px; padding: 9px 14px; font: 700 13px var(--font-body); cursor: pointer; }
+.btn-light { background: #fff; color: var(--blue-900); }
+.btn-ghost { background: rgba(255, 255, 255, .1); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .25); }
+
+.criteria { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+.crit { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.crit .top { display: flex; align-items: center; gap: 8px; }
+.crit .sw { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.crit .code { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.crit .type { margin-left: auto; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); background: var(--blue-50); padding: 2px 7px; border-radius: 6px; }
+.crit .name { font-weight: 700; margin-top: 6px; font-size: 13.5px; line-height: 1.3; }
+.crit .w { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.crit .w b { font-size: 18px; font-weight: 800; width: 44px; }
+.crit .w span { flex: 1; height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+.crit .w span i { display: block; height: 100%; border-radius: 3px; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; margin-top: 16px; align-items: start; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; min-width: 0; }
+.card-head { padding: 16px 18px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.card h2 { margin: 0; font-size: 16px; font-weight: 800; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.chip { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 5px 12px; font: 600 12.5px var(--font-body); color: var(--ink-2); cursor: pointer; }
+.chip b { font-family: var(--font-mono); font-weight: 500; margin-left: 4px; color: var(--muted); }
+.chip[aria-pressed="true"] { background: var(--blue-900); border-color: var(--blue-900); color: #fff; }
+.chip[aria-pressed="true"] b { color: #b9cbe7; }
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 720px; }
+th { text-align: left; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 12px 14px; border-bottom: 1px solid var(--line); background: #fafbfd; }
+td { padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: #f7faff; }
+tbody tr.sel { background: var(--blue-50); box-shadow: inset 3px 0 0 var(--blue-600); }
+.rk { font-weight: 800; font-size: 15px; width: 36px; }
+.ref { font-family: var(--font-mono); font-size: 13px; }
+.prod { color: var(--ink-2); font-size: 12.5px; }
+.contrib { min-width: 220px; }
+.sc { font-family: var(--font-mono); font-weight: 500; }
+.flag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px 3px 7px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.flag svg { width: 14px; height: 14px; }
+.flag.critical { background: var(--critical-bg); color: var(--critical-ink); }
+.flag.critical svg { color: var(--critical); }
+.flag.warning { background: var(--warning-bg); color: var(--warning-ink); }
+.flag.warning svg { color: var(--warning); }
+.flag.plain { background: #f1f4f9; color: var(--ink-2); }
+
+.detail { position: sticky; top: 16px; padding: 18px; }
+.detail .eyebrow { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+.detail h3 { margin: 4px 0 2px; font-family: var(--font-mono); font-size: 18px; font-weight: 500; }
+.detail .prod { margin-bottom: 14px; }
+.scorebox { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 12px; background: linear-gradient(120deg, var(--blue-50), #f6f9fe); border: 1px solid var(--line); }
+.scorebox .rank { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 20px; background: linear-gradient(140deg, var(--blue-600), var(--blue-900)); }
+.scorebox .v { font-family: var(--font-mono); font-size: 24px; }
+.scorebox .k { font-size: 12.5px; color: var(--muted); }
+.why { margin: 16px 0 8px; font-weight: 800; font-size: 14px; }
+.why-table { width: 100%; border-collapse: collapse; min-width: 0; }
+.why-table th { background: none; padding: 6px 4px; font-size: 11px; }
+.why-table td { padding: 8px 4px; font-size: 12.5px; }
+.why-table .cname { display: flex; align-items: center; gap: 8px; }
+.why-table .cname .sw { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.why-table .cb { display: flex; align-items: center; gap: 6px; }
+.why-table .cb span { width: 56px; height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+.why-table .cb span i { display: block; height: 100%; }
+.why-table tfoot td { font-weight: 800; border-bottom: 0; }
+.explain { margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: #fafbfd; border: 1px solid var(--line); color: var(--ink-2); font-size: 13px; }
+.detail .actions { display: flex; gap: 8px; margin-top: 14px; }
+.detail .btn-primary { background: var(--blue-900); color: #fff; flex: 1; }
+.detail .btn-line { background: #fff; color: var(--ink-1); box-shadow: inset 0 0 0 1px var(--line); flex: 1; }
+.note { margin-top: 18px; color: var(--muted); font-size: 12.5px; }
+
+@media (max-width: 1180px) {
+    .criteria { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .main { grid-template-columns: 1fr; }
+    .detail { position: static; }
+}
+@media (max-width: 640px) { .head { grid-template-columns: 1fr; } .criteria { grid-template-columns: 1fr 1fr; } .crumbs { display: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></symbol>
+</svg>
+
+<div class="appbar">
+    <div class="brand"><span class="mark">W</span>Weba ERP</div>
+    <div class="crumbs">Manufacturing<svg><use href="#i-chev"/></svg>Prioritas produksi<svg><use href="#i-chev"/></svg><b>Pusat keputusan</b></div>
+    <div class="sp"></div>
+    <span class="avatar">AW</span>
+</div>
+
+<div class="wrap">
+    <section class="head">
+        <div>
+            <div class="eyebrow">Decision support system, metode SAW</div>
+            <h1>Prioritas penyelesaian produksi</h1>
+            <div class="meta" id="meta"></div>
+            <div class="head-actions">
+                <button class="btn btn-light">Terapkan ke 5 teratas</button>
+                <button class="btn btn-ghost">Jalankan ulang evaluasi</button>
+            </div>
+        </div>
+        <div class="winner">
+            <div class="k">Prioritas tertinggi saat ini</div>
+            <div class="v" id="w-ref"></div>
+            <div class="s" id="w-score"></div>
+            <div class="k" id="w-sub"></div>
+        </div>
+    </section>
+
+    <section class="criteria" id="criteria" aria-label="Bobot kriteria"></section>
+
+    <section class="main">
+        <article class="card">
+            <div class="card-head"><h2>Ranking order aktif</h2><span class="prod">Klik baris untuk melihat alasan peringkatnya</span></div>
+            <div class="chips" id="chips"></div>
+            <div class="tablewrap">
+                <table>
+                    <thead><tr><th>#</th><th>Order</th><th>Deadline</th><th>Kontribusi kriteria terhadap skor</th><th>Skor</th></tr></thead>
+                    <tbody id="body"></tbody>
+                </table>
+            </div>
+        </article>
+
+        <aside class="card detail" id="detail" aria-live="polite"></aside>
+    </section>
+    <p class="note">Mockup tampilan. Skor dan ranking dari evaluasi SAW pada data demo; kontribusi = bobot x nilai ternormalisasi.</p>
+</div>
+
+<script src="data.js"></script>
+<script src="charts.js"></script>
+<script>
+(function () {
+    const W = window.WEBA, f = W.fmt, C = window.WebaCharts;
+    const $ = (id) => document.getElementById(id);
+    const colors = W.criteria.map((_, i) => `var(--c${i + 1})`);
+    const nf4 = (v) => v.toFixed(4).replace('.', ',');
+
+    $('meta').innerHTML = [
+        W.evaluation.name, W.evaluation.at, W.orders.length + ' order dinilai', W.criteria.length + ' kriteria, total bobot 1,00',
+    ].map((t) => `<span>${t}</span>`).join('');
+    const first = W.orders[0];
+    $('w-ref').textContent = first.ref;
+    $('w-score').textContent = f.score(first.score);
+    $('w-sub').textContent = first.product + ', ' + f.daysLeft(first);
+
+    $('criteria').innerHTML = W.criteria.map((c, i) => `
+        <div class="crit">
+            <div class="top"><span class="sw" style="background:${colors[i]}"></span><span class="code">${c.code}</span><span class="type">${c.type === 'cost' ? 'Cost' : 'Benefit'}</span></div>
+            <div class="name">${c.name}</div>
+            <div class="w"><b>${Math.round(c.weight * 100)}%</b><span><i style="width:${(c.weight / 0.3) * 100}%;background:${colors[i]}"></i></span></div>
+        </div>`).join('');
+
+    const filters = [
+        { key: 'all', label: 'Semua', test: () => true },
+        { key: 'late', label: 'Terlambat', test: (o) => o.isLate },
+        { key: 'due', label: 'Jatuh tempo 3 hari', test: (o) => o.isDueSoon },
+        { key: 'progress', label: 'Dikerjakan', test: (o) => o.state === 'progress' },
+        { key: 'confirmed', label: 'Dikonfirmasi', test: (o) => o.state === 'confirmed' },
+        { key: 'to_close', label: 'Siap ditutup', test: (o) => o.state === 'to_close' },
+    ];
+    let active = 'all';
+    let selected = first.ref;
+
+    const flag = (o) => o.isLate
+        ? `<span class="flag critical"><svg><use href="#i-alert"/></svg>${f.daysLeft(o)}</span>`
+        : o.isDueSoon
+            ? `<span class="flag warning"><svg><use href="#i-clock"/></svg>${f.daysLeft(o)}</span>`
+            : `<span class="flag plain">${f.daysLeft(o)}</span>`;
+
+    function renderChips() {
+        $('chips').innerHTML = filters.map((x) => `<button class="chip" data-k="${x.key}" aria-pressed="${x.key === active}">${x.label}<b>${W.orders.filter(x.test).length}</b></button>`).join('');
+    }
+
+    function renderTable() {
+        const test = filters.find((x) => x.key === active).test;
+        const rows = W.orders.filter(test);
+        $('body').innerHTML = rows.map((o) => `
+            <tr data-ref="${o.ref}" class="${o.ref === selected ? 'sel' : ''}">
+                <td class="rk tnum">${o.rank}</td>
+                <td><div class="ref">${o.ref}</div><div class="prod">${o.product}, ${W.stateLabel[o.state].toLowerCase()}</div></td>
+                <td>${flag(o)}</td>
+                <td class="contrib"><div data-c="${o.ref}"></div></td>
+                <td class="sc">${f.score(o.score)}</td>
+            </tr>`).join('');
+        rows.forEach((o) => {
+            C.contrib(document.querySelector(`[data-c="${o.ref}"]`), o.contribution.map((v, i) => ({
+                value: v,
+                tip: `<b>${W.criteria[i].code} ${W.criteria[i].name}</b><br>kontribusi ${nf4(v)} dari skor ${f.score(o.score)}`,
+            })), colors, { max: W.orders[0].score, height: 12 });
+        });
+    }
+
+    function rawText(o, i) {
+        const v = o.values[i];
+        const c = W.criteria[i];
+        if (v === null) {
+            return i === 0 ? 'tidak ada deadline' : 'belum diisi';
+        }
+        switch (c.code) {
+            case 'C1': return f.one(v) + ' hari' + (o.isLate ? ' (lewat)' : '');
+            case 'C2': return v + ' dari 5';
+            case 'C3': case 'C5': return v + '%';
+            case 'C4': return f.one(v) + ' jam';
+            default: return f.rupiahShort(v);
+        }
+    }
+
+    function renderDetail() {
+        const o = W.orders.find((x) => x.ref === selected);
+        const top = o.contribution.map((v, i) => ({ v, i })).sort((a, b) => b.v - a.v).slice(0, 2);
+        const maxC = Math.max(...W.criteria.map((c) => c.weight));
+        $('detail').innerHTML = `
+            <div class="eyebrow">Penjelasan peringkat</div>
+            <h3>${o.ref}</h3>
+            <div class="prod">${o.product}, ${f.int(o.qty)} pasang, ${W.stateLabel[o.state].toLowerCase()}</div>
+            <div class="scorebox"><div class="rank">${o.rank}</div><div><div class="k">Skor preferensi</div><div class="v">${f.score(o.score)}</div></div><div style="margin-left:auto">${flag(o)}</div></div>
+            <div class="why">Kenapa di peringkat ${o.rank}</div>
+            <table class="why-table">
+                <thead><tr><th>Kriteria</th><th>Nilai</th><th>r</th><th>Kontribusi</th></tr></thead>
+                <tbody>${W.criteria.map((c, i) => `
+                    <tr>
+                        <td><div class="cname"><span class="sw" style="background:${colors[i]}"></span>${c.short}</div></td>
+                        <td>${rawText(o, i)}</td>
+                        <td class="mono">${nf4(o.normalized[i]).slice(0, 5)}</td>
+                        <td><div class="cb"><span><i style="width:${(o.contribution[i] / maxC) * 100}%;background:${colors[i]}"></i></span><span class="mono" style="width:auto;height:auto;background:none">${nf4(o.contribution[i])}</span></div></td>
+                    </tr>`).join('')}
+                </tbody>
+                <tfoot><tr><td colspan="3">Total skor</td><td class="mono">${f.score(o.score)}</td></tr></tfoot>
+            </table>
+            <div class="explain">Penyumbang terbesar: <b>${W.criteria[top[0].i].name.toLowerCase()}</b> dan <b>${W.criteria[top[1].i].name.toLowerCase()}</b>. Kriteria cost (deadline, durasi) bernilai makin tinggi bila angkanya makin kecil.</div>
+            <div class="actions"><button class="btn btn-line">Buka order</button><button class="btn btn-primary">Tandai Urgent</button></div>`;
+    }
+
+    $('chips').addEventListener('click', (e) => {
+        const b = e.target.closest('.chip');
+        if (!b) { return; }
+        active = b.dataset.k;
+        renderChips();
+        renderTable();
+    });
+    $('body').addEventListener('click', (e) => {
+        const tr = e.target.closest('tr[data-ref]');
+        if (!tr) { return; }
+        selected = tr.dataset.ref;
+        document.querySelectorAll('#body tr').forEach((r) => r.classList.toggle('sel', r.dataset.ref === selected));
+        renderDetail();
+    });
+
+    renderChips();
+    renderTable();
+    renderDetail();
+})();
+</script>
+</body>
+</html>

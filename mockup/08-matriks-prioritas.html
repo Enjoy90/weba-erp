@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 8, Matriks Prioritas | Weba ERP</title>
+<style>
+/* Layout: kepala bergradasi, grafik sebar empat kuadran (skor SAW vs sisa hari) di kiri, ringkasan per kuadran di kanan, tabel data di bawah sebagai pendamping grafik. */
+:root {
+    --font-body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", monospace;
+    --page: #f1f5fa;
+    --card: #ffffff;
+    --ink-1: #0b1a33;
+    --ink-2: #46546d;
+    --muted: #74829a;
+    --line: #dfe6f0;
+    --grid: #e8eef6;
+    --axis: #c6d2e3;
+    --quad: #e9f2fd;
+    --blue-950: #061633;
+    --blue-900: #0b2350;
+    --blue-700: #1c5cab;
+    --blue-600: #2a78d6;
+    --blue-50: #ecf3fc;
+    --cat-progress: #2a78d6; --cat-confirmed: #eb6834; --cat-to_close: #1baf7a;
+    --critical: #d03b3b; --critical-bg: #fdecec; --critical-ink: #9c2121;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink-1); font: 14px/1.5 var(--font-body); -webkit-font-smoothing: antialiased; }
+.tnum { font-variant-numeric: tabular-nums; }
+.mono { font-family: var(--font-mono); }
+
+.head { padding: 22px clamp(16px, 2.6vw, 32px) 70px; color: #eaf2ff; background: radial-gradient(900px 300px at 90% -30%, rgba(88, 158, 242, .5), transparent 60%), linear-gradient(130deg, var(--blue-950), var(--blue-900) 50%, #1650a4); }
+.top { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.mark { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: #fff; color: var(--blue-900); font-weight: 800; }
+.top b { font-weight: 700; }
+.top .crumb { color: #9fbbe4; font-size: 13px; }
+.top .sp { flex: 1; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #e8f0fc; color: var(--blue-900); font-weight: 700; font-size: 12px; }
+.head h1 { margin: 0; font-size: clamp(22px, 2.6vw, 30px); font-weight: 700; }
+.head p { margin: 6px 0 0; color: #b9cbe7; max-width: 70ch; }
+
+main { padding: 0 clamp(16px, 2.6vw, 32px) 32px; margin-top: -48px; display: grid; gap: 16px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; min-width: 0; }
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.card h2 { margin: 0; font-size: 16px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+.legend i.hollow { background: #fff; box-shadow: inset 0 0 0 2px var(--ink-2); }
+.legend i.zone { width: 16px; height: 11px; border-radius: 3px; background: var(--quad); box-shadow: inset 0 0 0 1px #c9dcf4; }
+
+.quads { display: grid; gap: 10px; }
+.quad { border-radius: 14px; padding: 14px 16px; border: 1px solid var(--line); background: #fff; }
+.quad.hot { background: linear-gradient(135deg, var(--blue-900), #1650a4); color: #fff; border: 0; }
+.quad .t { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 700; }
+.quad .t b { font-size: 24px; }
+.quad .d { font-size: 12.5px; color: var(--ink-2); margin: 2px 0 8px; }
+.quad.hot .d { color: #c3d4ee; }
+.quad .refs { display: flex; flex-wrap: wrap; gap: 5px; }
+.quad .refs span { font-family: var(--font-mono); font-size: 11.5px; border-radius: 6px; padding: 1px 6px; background: #f1f5fa; border: 1px solid var(--line); }
+.quad.hot .refs span { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .2); }
+.how { font-size: 13px; color: var(--ink-2); }
+.how ol { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 720px; }
+th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 700; padding: 9px 12px; border-bottom: 1px solid var(--line); background: #fafbfd; }
+td { padding: 9px 12px; border-bottom: 1px solid var(--line); }
+tbody tr:hover { background: #f7faff; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; vertical-align: middle; }
+.qtag { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: #f1f5fa; color: var(--ink-2); white-space: nowrap; }
+.qtag.hot { background: var(--blue-900); color: #fff; }
+.late { color: var(--critical-ink); font-weight: 700; }
+.note { color: var(--muted); font-size: 12.5px; }
+
+@media (max-width: 1100px) { .row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"></svg>
+
+<header class="head">
+    <div class="top"><span class="mark">W</span><b>Weba ERP</b><span class="crumb">Prioritas produksi, matriks</span><span class="sp"></span><span class="avatar">AW</span></div>
+    <h1>Matriks prioritas produksi</h1>
+    <p>Setiap titik adalah satu order aktif. Makin ke kiri makin dekat deadline, makin ke atas makin tinggi skor SAW. Kuadran kiri atas adalah order yang perlu dikerjakan sekarang.</p>
+</header>
+
+<main>
+    <section class="row">
+        <article class="card">
+            <div class="card-head">
+                <h2>Skor SAW dibanding sisa waktu</h2>
+                <div class="legend">
+                    <span><i style="background:var(--cat-progress)"></i>Dikerjakan</span>
+                    <span><i style="background:var(--cat-confirmed)"></i>Dikonfirmasi</span>
+                    <span><i style="background:var(--cat-to_close)"></i>Siap ditutup</span>
+                    <span><i class="hollow"></i>Tanpa deadline</span>
+                    <span><i class="zone"></i>Zona kerjakan sekarang</span>
+                </div>
+            </div>
+            <div id="chart"></div>
+        </article>
+
+        <aside class="quads" id="quads"></aside>
+    </section>
+
+    <section class="row">
+        <article class="card">
+            <div class="card-head"><h2>Data matriks</h2><span class="note">Urut menurut peringkat SAW. Arahkan kursor ke titik di grafik untuk detail yang sama.</span></div>
+            <div class="tablewrap">
+                <table>
+                    <thead><tr><th>#</th><th>Order</th><th>Status</th><th>Sisa hari</th><th>Urgensi</th><th>Skor SAW</th><th>Kuadran</th></tr></thead>
+                    <tbody id="rows"></tbody>
+                </table>
+            </div>
+        </article>
+        <aside class="card how">
+            <h2>Cara membaca</h2>
+            <ol>
+                <li>Garis putus-putus vertikal: batas 3 hari ke deadline.</li>
+                <li>Garis putus-putus horizontal: skor 0,40, kira-kira sepertiga teratas.</li>
+                <li>Titik di kiri garis nol sudah melewati deadline.</li>
+                <li>Order dengan skor tinggi tapi deadline masih jauh biasanya bernilai besar atau urgensinya tinggi. Siapkan bahannya lebih awal.</li>
+            </ol>
+        </aside>
+    </section>
+    <p class="note">Mockup tampilan. Data demo PT. Weba International, evaluasi SAW 9 Okt 2026.</p>
+</main>
+
+<script src="data.js"></script>
+<script src="charts.js"></script>
+<script>
+(function () {
+    const W = window.WEBA, f = W.fmt, C = window.WebaCharts;
+    const $ = (id) => document.getElementById(id);
+    const X_SPLIT = 3, Y_SPLIT = 0.4, NO_DEADLINE_X = 22;
+
+    const quadOf = (o) => {
+        const near = o.daysLeft !== null && o.daysLeft <= X_SPLIT;
+        const high = o.score >= Y_SPLIT;
+        if (near && high) { return 'now'; }
+        if (!near && high) { return 'prep'; }
+        if (near && !high) { return 'check'; }
+        return 'normal';
+    };
+    const quads = {
+        now: { name: 'Kerjakan sekarang', desc: 'Skor tinggi dan deadline 3 hari atau sudah lewat.' },
+        prep: { name: 'Siapkan lebih awal', desc: 'Skor tinggi, deadline masih longgar.' },
+        check: { name: 'Cek kapasitas', desc: 'Deadline dekat, tapi skornya rendah. Pastikan tetap terkejar.' },
+        normal: { name: 'Jadwal normal', desc: 'Skor rendah dan waktu masih cukup.' },
+    };
+
+    C.scatter($('chart'), W.orders.map((o) => ({
+        x: o.daysLeft === null ? NO_DEADLINE_X : o.daysLeft,
+        y: o.score,
+        color: `var(--cat-${o.state})`,
+        hollow: o.daysLeft === null,
+        label: o.rank <= 5 ? o.ref.replace('WEBA/MO/', '') : '',
+        tip: `<b>${o.ref}</b> ${o.product}<br><span class="k">Peringkat</span> ${o.rank} <span class="k">Skor</span> ${f.score(o.score)}<br><span class="k">Deadline</span> ${f.daysLeft(o)}<br><span class="k">Kuadran</span> ${quads[quadOf(o)].name}`,
+    })), {
+        height: 520, xMin: -4, xMax: 23, yMin: 0.15, yMax: 0.85, xSplit: X_SPLIT, ySplit: Y_SPLIT,
+        xTicks: [-3, 0, 3, 7, 14, 21], yTicks: [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
+        xLabel: 'Sisa hari ke deadline (negatif = terlambat, paling kanan = tanpa deadline)', yLabel: 'Skor preferensi SAW',
+        quadrants: [
+            { pos: 'tl', text: 'Kerjakan sekarang', strong: true }, { pos: 'tr', text: 'Siapkan lebih awal' },
+            { pos: 'bl', text: 'Cek kapasitas' }, { pos: 'br', text: 'Jadwal normal' },
+        ],
+        title: 'skor SAW dibanding sisa hari ke deadline',
+    });
+
+    $('quads').innerHTML = Object.entries(quads).map(([key, q]) => {
+        const list = W.orders.filter((o) => quadOf(o) === key);
+        return `<div class="quad ${key === 'now' ? 'hot' : ''}">
+            <div class="t">${q.name}<b class="tnum">${list.length}</b></div>
+            <div class="d">${q.desc}</div>
+            <div class="refs">${list.map((o) => `<span>${o.ref.replace('WEBA/', '')}</span>`).join('')}</div>
+        </div>`;
+    }).join('');
+
+    $('rows').innerHTML = W.orders.map((o) => {
+        const q = quadOf(o);
+        return `<tr>
+            <td class="tnum"><b>${o.rank}</b></td>
+            <td><span class="mono">${o.ref}</span></td>
+            <td><span class="dot" style="background:var(--cat-${o.state})"></span>${W.stateLabel[o.state]}</td>
+            <td class="tnum ${o.isLate ? 'late' : ''}">${o.daysLeft === null ? 'tanpa deadline' : o.daysLeft + ' hari'}</td>
+            <td class="tnum">${o.values[1]} dari 5</td>
+            <td class="mono">${f.score(o.score)}</td>
+            <td><span class="qtag ${q === 'now' ? 'hot' : ''}">${quads[q].name}</span></td>
+        </tr>`;
+    }).join('');
+})();
+</script>
+</body>
+</html>

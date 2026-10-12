@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 9, Aplikasi Supervisor | Weba ERP</title>
+<style>
+/* Layout: halaman presentasi berlatar biru bergradasi berisi dua bingkai ponsel (beranda dan detail order) serta catatan keputusan UX di sampingnya. */
+:root {
+    --font-body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", monospace;
+    --ink-1: #0b1a33;
+    --ink-2: #46546d;
+    --muted: #74829a;
+    --line: #e1e7f0;
+    --blue-950: #061633;
+    --blue-900: #0b2350;
+    --blue-700: #1c5cab;
+    --blue-600: #2a78d6;
+    --blue-50: #ecf3fc;
+    --track: #e5edf7;
+    --critical: #d03b3b; --critical-bg: #fdecec; --critical-ink: #9c2121;
+    --warning: #c98500; --warning-bg: #fff4d9; --warning-ink: #7a5300;
+    --good: #0a8a0a; --good-bg: #e6f6e6;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; color: #eaf2ff; font: 14px/1.5 var(--font-body); -webkit-font-smoothing: antialiased;
+    background: radial-gradient(1000px 500px at 85% 0%, rgba(77, 150, 240, .4), transparent 60%), linear-gradient(160deg, var(--blue-950), var(--blue-900) 55%, #134592); }
+.tnum { font-variant-numeric: tabular-nums; }
+button { font: inherit; }
+:focus-visible { outline: 2px solid #8cc1ff; outline-offset: 2px; }
+
+.page { max-width: 1280px; margin: 0 auto; padding: 32px clamp(16px, 3vw, 40px) 40px; display: grid; grid-template-columns: 300px auto auto; gap: 36px; align-items: start; justify-content: center; }
+.intro .eyebrow { font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: #9fbbe4; font-weight: 700; }
+.intro h1 { margin: 8px 0; font-size: 28px; line-height: 1.2; }
+.intro p { color: #c3d4ee; margin: 0 0 18px; }
+.notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; counter-reset: n; }
+.notes li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; color: #d6e3f6; font-size: 13.5px; }
+.notes li::before { counter-increment: n; content: counter(n); width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: rgba(255, 255, 255, .12); font-weight: 700; color: #fff; }
+.notes b { color: #fff; }
+
+.phone { width: 360px; height: 760px; border-radius: 44px; padding: 12px; background: #0a0f1c; box-shadow: 0 30px 80px rgba(0, 0, 0, .45), inset 0 0 0 2px #26324a; position: relative; }
+.phone .label { position: absolute; top: -26px; left: 0; right: 0; text-align: center; font-size: 12.5px; color: #9fbbe4; font-weight: 600; }
+.screen { width: 100%; height: 100%; border-radius: 34px; overflow: hidden; background: #f3f6fa; color: var(--ink-1); display: flex; flex-direction: column; position: relative; }
+.status-bar { height: 34px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; font-size: 12.5px; font-weight: 600; }
+.island { width: 92px; height: 24px; border-radius: 14px; background: #0a0f1c; }
+.scroll { flex: 1; overflow-y: auto; }
+
+.app-head { color: #fff; padding: 6px 18px 18px; background: linear-gradient(150deg, var(--blue-900), #1650a4); }
+.status-bar.dark { background: var(--blue-900); color: #fff; }
+.app-head .hi { font-size: 13px; color: #b9cbe7; }
+.app-head h2 { margin: 2px 0 12px; font-size: 21px; }
+.chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.chips div { background: rgba(255, 255, 255, .1); border-radius: 12px; padding: 8px 10px; }
+.chips b { display: block; font-size: 20px; }
+.chips span { font-size: 11.5px; color: #c3d4ee; }
+.sec { padding: 14px 16px 6px; display: flex; align-items: baseline; justify-content: space-between; }
+.sec h3 { margin: 0; font-size: 15px; }
+.sec a { font-size: 12.5px; color: var(--blue-600); font-weight: 600; text-decoration: none; }
+.tasks { padding: 0 12px 16px; display: grid; gap: 8px; }
+.task { display: grid; grid-template-columns: 40px 1fr auto; gap: 10px; align-items: center; background: #fff; border-radius: 14px; padding: 12px; border: 1px solid var(--line); text-align: left; cursor: pointer; min-height: 64px; width: 100%; }
+.task.sel { border-color: var(--blue-600); box-shadow: 0 0 0 2px rgba(42, 120, 214, .2); }
+.task .r { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-weight: 800; font-size: 16px; background: var(--blue-50); color: var(--blue-700); }
+.task .r.hot { background: linear-gradient(140deg, var(--blue-600), var(--blue-900)); color: #fff; }
+.task .ref { font-family: var(--font-mono); font-size: 13px; font-weight: 600; }
+.task .p { font-size: 12px; color: var(--ink-2); }
+.task .chev { width: 18px; height: 18px; color: #a9b5c8; }
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 1px 8px 1px 6px; border-radius: 999px; font-size: 11.5px; font-weight: 700; margin-top: 4px; }
+.badge svg { width: 12px; height: 12px; }
+.badge.critical { background: var(--critical-bg); color: var(--critical-ink); } .badge.critical svg { color: var(--critical); }
+.badge.warning { background: var(--warning-bg); color: var(--warning-ink); } .badge.warning svg { color: var(--warning); }
+.badge.normal { background: #eef2f7; color: var(--ink-2); }
+
+.tabbar { height: 70px; display: grid; grid-template-columns: repeat(4, 1fr); background: #fff; border-top: 1px solid var(--line); padding-bottom: 8px; }
+.tabbar a { display: grid; place-items: center; align-content: center; gap: 2px; text-decoration: none; color: var(--muted); font-size: 11px; font-weight: 600; }
+.tabbar a svg { width: 22px; height: 22px; }
+.tabbar a.on { color: var(--blue-700); }
+
+.detail-head { background: #fff; padding: 4px 16px 14px; border-bottom: 1px solid var(--line); }
+.back { display: inline-flex; align-items: center; gap: 4px; color: var(--blue-600); font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+.back svg { width: 16px; height: 16px; }
+.detail-head .ref { font-family: var(--font-mono); font-size: 18px; font-weight: 600; }
+.detail-head .p { color: var(--ink-2); font-size: 13px; }
+.kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 16px; }
+.kv div { background: #fff; border-radius: 12px; padding: 10px 12px; border: 1px solid var(--line); }
+.kv span { display: block; font-size: 11.5px; color: var(--muted); }
+.kv b { font-size: 16px; }
+.steps { margin: 0 16px; background: #fff; border-radius: 14px; border: 1px solid var(--line); padding: 12px 14px; list-style: none; display: grid; gap: 0; }
+.steps li { display: grid; grid-template-columns: 24px 1fr auto; gap: 10px; align-items: center; padding: 8px 0; position: relative; font-size: 13.5px; }
+.steps li:not(:last-child)::after { content: ""; position: absolute; left: 11px; top: 32px; bottom: -8px; width: 2px; background: var(--track); }
+.steps li.done:not(:last-child)::after { background: var(--blue-600); }
+.steps .ic { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; border: 2px solid #c5d1e2; background: #fff; z-index: 1; }
+.steps .ic svg { width: 13px; height: 13px; }
+.steps .done .ic { background: var(--blue-600); border-color: var(--blue-600); color: #fff; }
+.steps .run .ic { border-color: var(--good); }
+.steps .run .ic::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--good); }
+.steps .s { font-size: 12px; color: var(--muted); }
+.steps .run .s { color: var(--good); font-weight: 700; }
+.actions { padding: 14px 16px 18px; display: grid; gap: 8px; }
+.big { border: 0; border-radius: 14px; min-height: 50px; font-weight: 700; font-size: 15px; cursor: pointer; }
+.big.primary { background: linear-gradient(140deg, var(--blue-600), var(--blue-900)); color: #fff; }
+.big.line { background: #fff; color: var(--ink-1); box-shadow: inset 0 0 0 1px var(--line); }
+.big.warn { background: #fff; color: var(--critical-ink); box-shadow: inset 0 0 0 1px #f2c9c9; }
+
+@media (max-width: 1180px) { .page { grid-template-columns: 1fr; justify-items: center; } .intro { max-width: 760px; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M7 12h10"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+</svg>
+
+<div class="page">
+    <section class="intro">
+        <div class="eyebrow">Aplikasi supervisor, versi ponsel</div>
+        <h1>Bekerja dari lantai produksi</h1>
+        <p>Supervisor jarang duduk di depan komputer. Versi ponsel ini hanya memuat yang perlu diputuskan di lapangan: order mana dikerjakan dulu, sudah sampai tahap apa, dan aksi berikutnya.</p>
+        <ol class="notes">
+            <li><span><b>Urutan kerja dari SAW</b> langsung di beranda, tanpa perlu membuka menu.</span></li>
+            <li><span><b>Target sentuh besar</b>, minimal 48 piksel, nyaman dipakai dengan sarung tangan kerja.</span></li>
+            <li><span><b>Status selalu berlabel</b>: terlambat dan segera memakai ikon dan teks, bukan warna saja.</span></li>
+            <li><span><b>Langkah 5 tahap</b> memperlihatkan posisi order dan tahap yang sedang berjalan.</span></li>
+            <li><span><b>Satu aksi utama</b> per layar, aksi lain di bawahnya. Laporan kendala dibedakan warnanya.</span></li>
+            <li><span><b>Menu bawah</b> berisi empat tujuan saja, termasuk pindai barcode work order.</span></li>
+        </ol>
+    </section>
+
+    <div class="phone">
+        <div class="label">Beranda (ketuk order untuk melihat detail)</div>
+        <div class="screen">
+            <div class="status-bar dark"><span>08.42</span><span class="island"></span><span>87%</span></div>
+            <div class="scroll">
+                <div class="app-head">
+                    <div class="hi">Jumat, 9 Oktober, Shift 1</div>
+                    <h2>Halo, Supervisor</h2>
+                    <div class="chips" id="chips"></div>
+                </div>
+                <div class="sec"><h3>Urutan kerja hari ini</h3><a href="#">Semua</a></div>
+                <div class="tasks" id="tasks"></div>
+            </div>
+            <nav class="tabbar">
+                <a class="on" href="#"><svg><use href="#i-home"/></svg>Beranda</a>
+                <a href="#"><svg><use href="#i-list"/></svg>Order</a>
+                <a href="#"><svg><use href="#i-scan"/></svg>Pindai</a>
+                <a href="#"><svg><use href="#i-user"/></svg>Akun</a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="phone">
+        <div class="label">Detail order</div>
+        <div class="screen">
+            <div class="status-bar"><span>08.42</span><span class="island"></span><span>87%</span></div>
+            <div class="scroll" id="detail" aria-live="polite"></div>
+        </div>
+    </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function () {
+    const W = window.WEBA, f = W.fmt;
+    const $ = (id) => document.getElementById(id);
+    const kind = (o) => (o.isLate ? 'critical' : (o.isDueSoon ? 'warning' : 'normal'));
+    const badge = (o) => `<span class="badge ${kind(o)}">${o.isLate ? '<svg><use href="#i-alert"/></svg>' : (o.isDueSoon ? '<svg><use href="#i-clock"/></svg>' : '')}${f.daysLeft(o)}</span>`;
+    const stageName = (o) => (o.state === 'to_close' ? 'Siap ditutup' : (o.state === 'confirmed' ? 'Belum mulai' : 'Tahap ' + (o.stageIndex + 1) + ', ' + W.stages[Math.min(o.stageIndex, 4)].name));
+
+    $('chips').innerHTML = `
+        <div><b class="tnum">${W.kpi.late}</b><span>terlambat</span></div>
+        <div><b class="tnum">${W.kpi.dueSoon}</b><span>jatuh tempo</span></div>
+        <div><b class="tnum">${W.orders.filter((o) => o.running).length}</b><span>sedang jalan</span></div>`;
+
+    const list = W.orders.slice(0, 8);
+    let selected = list[0].ref;
+
+    function renderTasks() {
+        $('tasks').innerHTML = list.map((o) => `
+            <button class="task ${o.ref === selected ? 'sel' : ''}" data-ref="${o.ref}">
+                <span class="r ${o.rank <= 3 ? 'hot' : ''}">${o.rank}</span>
+                <span><span class="ref">${o.ref.replace('WEBA/', '')}</span><br><span class="p">${o.product}, ${stageName(o)}</span><br>${badge(o)}</span>
+                <svg class="chev"><use href="#i-chev"/></svg>
+            </button>`).join('');
+    }
+
+    function renderDetail() {
+        const o = W.orders.find((x) => x.ref === selected);
+        const next = o.state === 'to_close' ? null : W.stages[Math.min(o.stageIndex, 4)];
+        const primary = o.state === 'to_close' ? 'Tutup order' : (o.running ? 'Catat hasil ' + next.name : 'Mulai tahap ' + next.name);
+        $('detail').innerHTML = `
+            <div class="detail-head">
+                <div class="back"><svg><use href="#i-back"/></svg>Urutan kerja</div>
+                <div class="ref">${o.ref}</div>
+                <div class="p">${o.product}, ${f.int(o.qty)} pasang</div>
+                ${badge(o)}
+            </div>
+            <div class="kv">
+                <div><span>Peringkat SAW</span><b class="tnum">${o.rank}</b></div>
+                <div><span>Skor</span><b class="tnum">${f.score(o.score)}</b></div>
+                <div><span>Progres</span><b class="tnum">${o.progress}%</b></div>
+                <div><span>Bahan</span><b class="tnum">${o.material}%</b></div>
+            </div>
+            <ol class="steps">${W.stages.map((s, i) => {
+                const done = i < o.done;
+                const run = !done && o.running && i === o.stageIndex;
+                return `<li class="${done ? 'done' : (run ? 'run' : '')}"><span class="ic">${done ? '<svg><use href="#i-check"/></svg>' : ''}</span><span>${s.name}</span><span class="s">${done ? 'Selesai' : (run ? 'Berjalan' : 'Menunggu')}</span></li>`;
+            }).join('')}</ol>
+            <div class="actions">
+                <button class="big primary">${primary}</button>
+                <button class="big line">Lihat bahan dan BoM</button>
+                <button class="big warn">Laporkan kendala</button>
+            </div>`;
+    }
+
+    $('tasks').addEventListener('click', (e) => {
+        const b = e.target.closest('.task');
+        if (!b) { return; }
+        selected = b.dataset.ref;
+        renderTasks();
+        renderDetail();
+    });
+    renderTasks();
+    renderDetail();
+})();
+</script>
+</body>
+</html>

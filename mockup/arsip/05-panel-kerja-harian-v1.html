@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 5, Panel Kerja Harian | Weba ERP</title>
+<style>
+/* Layout: sidebar biru bergradasi seperti panel Filament, konten berorientasi tugas: daftar "yang perlu dikerjakan hari ini", angka ringkas, lalu tab Prioritas / Work center / Status. */
+:root {
+    --font-body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", monospace;
+    --page: #f3f6fa;
+    --card: #ffffff;
+    --ink-1: #0b1a33;
+    --ink-2: #46546d;
+    --muted: #74829a;
+    --line: #e0e6ef;
+    --blue-950: #061633;
+    --blue-900: #0b2350;
+    --blue-700: #1c5cab;
+    --blue-600: #2a78d6;
+    --blue-50: #ecf3fc;
+    --bar: #2a78d6;
+    --track: #e8eef7;
+    --critical: #d03b3b; --critical-bg: #fdecec; --critical-ink: #9c2121;
+    --warning: #c98500; --warning-bg: #fff4d9; --warning-ink: #7a5300;
+    --info-bg: #ecf3fc; --info-ink: #123f86;
+    --s-draft: #86b6ef; --s-confirmed: #5598e7; --s-progress: #2a78d6; --s-to_close: #1c5cab; --s-done: #104281;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink-1); font: 14.5px/1.55 var(--font-body); -webkit-font-smoothing: antialiased; display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100vh; }
+.tnum { font-variant-numeric: tabular-nums; }
+:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 2px; }
+button { font-family: inherit; }
+
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; color: #c9d8f0; padding: 18px 14px; background: linear-gradient(185deg, var(--blue-950) 0%, var(--blue-900) 45%, #123f86 100%); }
+.side .brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 18px; color: #fff; font-weight: 800; }
+.side .mark { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; background: linear-gradient(140deg, #fff, #b9d4f7); color: var(--blue-900); font-size: 15px; }
+.side .brand small { display: block; font-weight: 500; color: #9fb6da; font-size: 12px; }
+.group { margin-top: 14px; }
+.group .gl { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #7f9cc9; padding: 0 10px 6px; }
+.side a { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px; color: #c9d8f0; text-decoration: none; font-weight: 500; }
+.side a svg { width: 18px; height: 18px; opacity: .85; }
+.side a:hover { background: rgba(255, 255, 255, .07); color: #fff; }
+.side a.on { background: rgba(255, 255, 255, .14); color: #fff; font-weight: 600; }
+.side a .count { margin-left: auto; font-size: 12px; font-weight: 700; background: rgba(229, 72, 77, .9); color: #fff; border-radius: 999px; padding: 0 7px; }
+
+.main { min-width: 0; }
+.topbar { position: sticky; top: 0; z-index: 5; height: 60px; display: flex; align-items: center; gap: 14px; padding: 0 clamp(16px, 2.6vw, 32px); background: rgba(255, 255, 255, .92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.search { flex: 1; max-width: 460px; display: flex; align-items: center; gap: 8px; background: #f5f8fc; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; color: var(--muted); }
+.search svg { width: 16px; height: 16px; }
+.search input { border: 0; background: transparent; font: inherit; color: var(--ink-1); width: 100%; outline: none; }
+.search kbd { white-space: nowrap; font-family: var(--font-mono); font-size: 11px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 0 5px; background: #fff; }
+.topbar .sp { flex: 1; }
+.who { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+.who .avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--blue-50); color: var(--blue-700); font-weight: 700; font-size: 12px; }
+.who small { display: block; color: var(--muted); font-size: 12px; }
+
+.content { padding: 22px clamp(16px, 2.6vw, 32px) 40px; }
+.hello { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.hello h1 { margin: 0; font-size: clamp(22px, 2.4vw, 28px); font-weight: 800; letter-spacing: -.01em; }
+.hello p { margin: 4px 0 0; color: var(--ink-2); }
+.btn { border: 0; border-radius: 10px; padding: 9px 14px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.btn svg { width: 16px; height: 16px; }
+.btn-primary { background: linear-gradient(135deg, var(--blue-600), var(--blue-900)); color: #fff; }
+.btn-line { background: #fff; color: var(--ink-1); box-shadow: inset 0 0 0 1px var(--line); }
+.btn-sm { padding: 6px 11px; font-size: 13px; }
+.hello .actions { display: flex; gap: 8px; }
+
+.todo { margin-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.task { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 10px; border-top: 4px solid var(--edge); }
+.task .t { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.task .t .ic { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; flex: none; }
+.task .t .ic svg { width: 17px; height: 17px; }
+.task .t .num { margin-left: auto; font-size: 24px; font-weight: 800; }
+.task p { margin: 0; color: var(--ink-2); font-size: 13.5px; }
+.task .refs { display: flex; flex-wrap: wrap; gap: 6px; }
+.task .refs span { font-family: var(--font-mono); font-size: 12px; background: #f4f7fb; border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; }
+.task .go { margin-top: auto; }
+.task.critical { --edge: var(--critical); } .task.critical .ic { background: var(--critical-bg); color: var(--critical); }
+.task.warning { --edge: #fab219; } .task.warning .ic { background: var(--warning-bg); color: var(--warning); }
+.task.plan { --edge: var(--blue-600); } .task.plan .ic { background: var(--info-bg); color: var(--blue-700); }
+
+.stats { margin-top: 14px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.stat { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+.stat .l { color: var(--ink-2); font-size: 13px; display: flex; align-items: center; gap: 6px; }
+.stat .v { font-size: 26px; font-weight: 800; margin-top: 4px; }
+.stat .v small { font-size: 13px; color: var(--muted); font-weight: 600; margin-left: 4px; }
+.info { width: 16px; height: 16px; border-radius: 50%; border: 0; padding: 0; background: var(--blue-50); color: var(--blue-700); font-size: 11px; font-weight: 800; display: inline-grid; place-items: center; cursor: help; }
+
+.panel { margin-top: 16px; background: #fff; border: 1px solid var(--line); border-radius: 16px; }
+.tabs { display: flex; gap: 4px; padding: 8px 10px 0; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tab { border: 0; background: none; padding: 10px 14px; font-weight: 700; color: var(--muted); border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; }
+.tab[aria-selected="true"] { color: var(--blue-900); border-bottom-color: var(--blue-600); }
+.tab b { font-family: var(--font-mono); font-weight: 500; font-size: 12px; color: var(--muted); margin-left: 4px; }
+.tabpanel { padding: 16px 18px 18px; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 12px; }
+.toolbar .hint { color: var(--muted); font-size: 13px; margin-left: auto; }
+.seg { display: inline-flex; background: #f3f6fa; border-radius: 10px; padding: 3px; }
+.seg button { border: 0; background: none; padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 13px; color: var(--ink-2); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: #fff; color: var(--ink-1); box-shadow: 0 1px 2px rgba(11, 26, 51, .1); }
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 760px; }
+th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 700; padding: 9px 12px; border-bottom: 1px solid var(--line); background: #fafbfd; white-space: nowrap; }
+td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tbody tr:hover { background: #f7faff; }
+.ref { font-family: var(--font-mono); font-size: 13px; }
+.muted { color: var(--muted); font-size: 12.5px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px 2px 7px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.pill svg { width: 13px; height: 13px; }
+.pill.critical { background: var(--critical-bg); color: var(--critical-ink); }
+.pill.critical svg { color: var(--critical); }
+.pill.warning { background: var(--warning-bg); color: var(--warning-ink); }
+.pill.warning svg { color: var(--warning); }
+.pill.plain { background: #f1f4f9; color: var(--ink-2); }
+.state { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; }
+.state i { width: 8px; height: 8px; border-radius: 2px; }
+.prog { display: flex; align-items: center; gap: 8px; }
+.prog span { width: 70px; height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+.prog span i { display: block; height: 100%; background: #5598e7; }
+.scorecell { font-family: var(--font-mono); }
+.rowact { opacity: 0; transition: opacity .12s; }
+tr:hover .rowact, tr:focus-within .rowact { opacity: 1; }
+.wcgrid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; }
+.legend { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.legend li { display: flex; align-items: center; gap: 10px; color: var(--ink-2); }
+.legend .sw { width: 10px; height: 10px; border-radius: 3px; }
+.legend b { margin-left: auto; color: var(--ink-1); }
+.foot { padding: 12px 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.note { margin-top: 16px; color: var(--muted); font-size: 12.5px; }
+
+@media (max-width: 1180px) { .todo { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .wcgrid { grid-template-columns: 1fr; } }
+@media (max-width: 860px) { body { grid-template-columns: 1fr; } .side { display: none; } .who div { display: none; } .search kbd { display: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/></symbol>
+    <symbol id="i-rank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V10m6 10V4m6 16v-7"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 18h4M12 18h8M14 4v4M8 16v4M4 12h16"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/></symbol>
+    <symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l2.4 11h11.2L21 7H6.2"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4m0 0h11l-2 4 2 4H5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14"/></symbol>
+</svg>
+
+<aside class="side" aria-label="Navigasi utama">
+    <div class="brand"><span class="mark">W</span><div>Weba ERP<small>PT. Weba International</small></div></div>
+    <div class="group"><div class="gl">Dashboard</div>
+        <a class="on" href="#"><svg><use href="#i-home"/></svg>Panel kerja harian</a>
+        <a href="#"><svg><use href="#i-rank"/></svg>Dashboard produksi</a>
+    </div>
+    <div class="group"><div class="gl">Manufaktur</div>
+        <a href="#"><svg><use href="#i-list"/></svg>Order produksi<span class="count">3</span></a>
+        <a href="#"><svg><use href="#i-gear"/></svg>Work order</a>
+        <a href="#"><svg><use href="#i-flag"/></svg>Prioritas SAW</a>
+        <a href="#"><svg><use href="#i-sliders"/></svg>Kriteria dan bobot</a>
+    </div>
+    <div class="group"><div class="gl">Persediaan</div>
+        <a href="#"><svg><use href="#i-box"/></svg>Stok bahan</a>
+        <a href="#"><svg><use href="#i-cart"/></svg>Pembelian</a>
+    </div>
+    <div class="group"><div class="gl">Laporan</div>
+        <a href="#"><svg><use href="#i-doc"/></svg>Laporan produksi</a>
+    </div>
+</aside>
+
+<div class="main">
+    <header class="topbar">
+        <label class="search"><svg><use href="#i-search"/></svg><input type="search" placeholder="Cari order, artikel, atau work center" aria-label="Cari"><kbd>Ctrl K</kbd></label>
+        <span class="sp"></span>
+        <div class="who"><span class="avatar">AW</span><div>Admin Weba<small>Manajer produksi</small></div></div>
+    </header>
+
+    <div class="content">
+        <section class="hello">
+            <div>
+                <h1>Selamat pagi, Admin</h1>
+                <p id="hello-sub"></p>
+            </div>
+            <div class="actions">
+                <button class="btn btn-line"><svg><use href="#i-down"/></svg>Unduh laporan</button>
+                <button class="btn btn-primary"><svg><use href="#i-play"/></svg>Jalankan SAW</button>
+            </div>
+        </section>
+
+        <section class="todo" aria-label="Yang perlu dikerjakan hari ini" id="todo"></section>
+
+        <section class="stats" id="stats"></section>
+
+        <section class="panel">
+            <div class="tabs" role="tablist">
+                <button class="tab" role="tab" aria-selected="true" data-tab="prio">Urutan prioritas<b>23</b></button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="wc">Beban work center<b>5</b></button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="st">Status order<b>30</b></button>
+            </div>
+
+            <div class="tabpanel" data-panel="prio">
+                <div class="toolbar">
+                    <div class="seg" id="seg" role="group" aria-label="Saring order">
+                        <button aria-pressed="true" data-f="all">Semua</button>
+                        <button aria-pressed="false" data-f="attention">Perlu perhatian</button>
+                        <button aria-pressed="false" data-f="progress">Sedang dikerjakan</button>
+                    </div>
+                    <span class="hint">Arahkan kursor ke baris untuk aksi cepat</span>
+                </div>
+                <div class="tablewrap">
+                    <table>
+                        <thead><tr>
+                            <th>Prioritas</th><th>Order</th><th>Status</th><th>Deadline</th><th>Progres</th>
+                            <th>Skor <button class="info" id="info-score" aria-label="Apa itu skor">?</button></th><th></th>
+                        </tr></thead>
+                        <tbody id="prio-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tabpanel" data-panel="wc" hidden>
+                <div class="wcgrid">
+                    <div><div class="muted" style="margin-bottom:8px">Sisa jam kerja dari order aktif, per work center</div><div id="wc"></div></div>
+                    <div id="wc-table"></div>
+                </div>
+            </div>
+            <div class="tabpanel" data-panel="st" hidden>
+                <div class="muted" style="margin-bottom:10px">Sebaran 30 order produksi menurut tahap siklusnya</div>
+                <div id="st"></div>
+                <ul class="legend" id="st-legend"></ul>
+            </div>
+            <div class="foot"><span id="foot-eval"></span><a href="#" style="color:var(--blue-600);font-weight:700;text-decoration:none">Buka halaman prioritas lengkap</a></div>
+        </section>
+        <p class="note">Mockup tampilan. Data demo PT. Weba International. Mendekati struktur panel Filament sehingga paling mudah diterapkan.</p>
+    </div>
+</div>
+
+<script src="../data.js"></script>
+<script src="../charts.js"></script>
+<script>
+(function () {
+    const W = window.WEBA, f = W.fmt, C = window.WebaCharts;
+    const $ = (id) => document.getElementById(id);
+
+    const attention = W.orders.filter((o) => o.isLate || o.isDueSoon);
+    $('hello-sub').textContent = f.longDate(W.today) + '. Ada ' + W.kpi.late + ' order terlambat dan ' + W.kpi.dueSoon + ' order jatuh tempo dalam 3 hari.';
+
+    const refs = (list) => list.slice(0, 4).map((o) => `<span>${o.ref.replace('WEBA/', '')}</span>`).join('');
+    const top5 = W.orders.slice(0, 5);
+    const short = W.orders.filter((o) => o.material < 100);
+    $('todo').innerHTML = `
+        <article class="task critical">
+            <div class="t"><span class="ic"><svg><use href="#i-alert"/></svg></span>Tangani order terlambat<span class="num tnum">${W.kpi.late}</span></div>
+            <p>Deadline sudah lewat. Pertimbangkan lembur atau kabari pelanggan.</p>
+            <div class="refs">${refs(W.late)}</div>
+            <div class="go"><button class="btn btn-sm btn-line">Lihat order terlambat</button></div>
+        </article>
+        <article class="task plan">
+            <div class="t"><span class="ic"><svg><use href="#i-flag"/></svg></span>Terapkan prioritas hari ini<span class="num tnum">5</span></div>
+            <p>Hasil SAW pagi ini siap. Jadikan 5 order teratas sebagai prioritas Urgent.</p>
+            <div class="refs">${refs(top5)}</div>
+            <div class="go"><button class="btn btn-sm btn-primary">Tinjau dan terapkan</button></div>
+        </article>
+        <article class="task warning">
+            <div class="t"><span class="ic"><svg><use href="#i-box"/></svg></span>Lengkapi bahan baku<span class="num tnum">${short.length}</span></div>
+            <p>Order ini belum mendapat bahan penuh. Kekurangan terbesar: sol PU.</p>
+            <div class="refs">${refs(short)}</div>
+            <div class="go"><button class="btn btn-sm btn-line">Buat permintaan pembelian</button></div>
+        </article>`;
+
+    $('stats').innerHTML = [
+        ['Order aktif', W.kpi.active, 'order', 'Order berstatus dikonfirmasi, dikerjakan, atau siap ditutup'],
+        ['Jatuh tempo 3 hari', W.kpi.dueSoon, 'order', 'Deadline hari ini sampai 3 hari ke depan'],
+        ['Rata-rata progres', f.pct(W.kpi.avgProgress), '', 'Rata-rata persentase work order yang selesai, dibobot durasi'],
+        ['Sisa beban kerja', f.one(W.kpi.remainingHours), 'jam', 'Total jam kerja yang belum dikerjakan di semua work center'],
+    ].map(([l, v, u, help], i) => `
+        <div class="stat"><div class="l">${l}<button class="info" data-help="${i}" aria-label="Penjelasan ${l}">?</button></div><div class="v tnum">${v}<small>${u}</small></div></div>`).join('');
+    document.querySelectorAll('.stat .info').forEach((b, i) => C.bindTip(b, [
+        'Order berstatus dikonfirmasi, dikerjakan, atau siap ditutup.',
+        'Deadline hari ini sampai 3 hari ke depan.',
+        'Rata-rata persentase pekerjaan yang selesai pada order aktif.',
+        'Total jam kerja yang belum dikerjakan di semua work center.',
+    ][i]));
+    C.bindTip($('info-score'), '<b>Skor preferensi SAW</b><br>Nilai 0 sampai 1 dari 6 kriteria berbobot. Makin tinggi, makin perlu didahulukan.');
+
+    const pill = (o) => o.isLate
+        ? `<span class="pill critical"><svg><use href="#i-alert"/></svg>${f.daysLeft(o)}</span>`
+        : o.isDueSoon
+            ? `<span class="pill warning"><svg><use href="#i-clock"/></svg>${f.daysLeft(o)}</span>`
+            : `<span class="pill plain">${f.date(o.deadline)}</span>`;
+    let filter = 'all';
+    function renderPrio() {
+        const rows = W.orders.filter((o) => filter === 'all' || (filter === 'attention' ? (o.isLate || o.isDueSoon) : o.state === 'progress'));
+        $('prio-body').innerHTML = rows.map((o) => `
+            <tr>
+                <td class="tnum"><b>${o.rank}</b></td>
+                <td><div class="ref">${o.ref}</div><div class="muted">${o.product}, ${f.int(o.qty)} pasang</div></td>
+                <td><span class="state"><i style="background:var(--s-${o.state})"></i>${W.stateLabel[o.state]}</span></td>
+                <td>${pill(o)}</td>
+                <td><div class="prog"><span><i style="width:${o.progress}%"></i></span><span class="tnum" style="width:auto;height:auto;background:none">${o.progress}%</span></div></td>
+                <td class="scorecell">${f.score(o.score)}</td>
+                <td class="rowact"><button class="btn btn-sm btn-line">Buka</button></td>
+            </tr>`).join('');
+    }
+    $('seg').addEventListener('click', (e) => {
+        const b = e.target.closest('button');
+        if (!b) { return; }
+        filter = b.dataset.f;
+        $('seg').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        renderPrio();
+    });
+    renderPrio();
+
+    let wcDrawn = false, stDrawn = false;
+    document.querySelector('.tabs').addEventListener('click', (e) => {
+        const t = e.target.closest('.tab');
+        if (!t) { return; }
+        document.querySelectorAll('.tab').forEach((x) => x.setAttribute('aria-selected', String(x === t)));
+        document.querySelectorAll('.tabpanel').forEach((p) => { p.hidden = p.dataset.panel !== t.dataset.tab; });
+        if (t.dataset.tab === 'wc' && !wcDrawn) {
+            wcDrawn = true;
+            C.hbar($('wc'), W.stages.map((s) => ({ label: s.name, value: s.hours, valueLabel: f.one(s.hours) + ' jam', tip: `<b>${s.full}</b><br>${f.one(s.hours)} jam tersisa` })), { labelWidth: 90, valueWidth: 72, row: 38, thickness: 16 });
+            $('wc-table').innerHTML = `<table style="min-width:0"><thead><tr><th>Work center</th><th>Menunggu</th><th>Berjalan</th></tr></thead><tbody>${W.stages.map((s) => `<tr><td>${s.name}</td><td class="tnum">${s.queued} order</td><td class="tnum">${s.running}</td></tr>`).join('')}</tbody></table>`;
+        }
+        if (t.dataset.tab === 'st' && !stDrawn) {
+            stDrawn = true;
+            C.stack($('st'), W.statuses.map((s) => ({ label: s.label, value: s.count, color: `var(--s-${s.key})`, tip: `<b>${s.label}</b><br>${s.count} order` })), { height: 22 });
+            $('st-legend').innerHTML = W.statuses.map((s) => `<li><span class="sw" style="background:var(--s-${s.key})"></span>${s.label}<b class="tnum">${s.count} order</b></li>`).join('');
+        }
+    });
+
+    $('foot-eval').textContent = 'Evaluasi terakhir: ' + W.evaluation.name + ', ' + W.evaluation.at;
+})();
+</script>
+</body>
+</html>

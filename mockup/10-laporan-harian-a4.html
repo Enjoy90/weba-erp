@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 10, Laporan Harian A4 | Weba ERP</title>
+<style>
+/* Layout: pratinjau dokumen A4 di atas latar abu kebiruan, toolbar di atas. Saat dicetak hanya lembar A4 yang keluar. */
+:root {
+    --font-body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", monospace;
+    --desk: #dfe6ef;
+    --ink-1: #0b1a33;
+    --ink-2: #3f4d66;
+    --muted: #6f7d95;
+    --line: #d9e1ec;
+    --blue-950: #061633;
+    --blue-900: #0b2350;
+    --blue-700: #1c5cab;
+    --blue-600: #2a78d6;
+    --blue-50: #ecf3fc;
+    --bar: #2a78d6;
+    --track: #e8eef7;
+    --critical: #c43333; --critical-bg: #fbe9e9;
+    --warning: #b57800; --warning-bg: #fff3d6;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--desk); color: var(--ink-1); font: 13px/1.5 var(--font-body); -webkit-font-smoothing: antialiased; }
+.tnum { font-variant-numeric: tabular-nums; }
+.mono { font-family: var(--font-mono); }
+:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 2px; }
+
+.toolbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 10px; padding: 10px clamp(16px, 3vw, 32px); background: #fff; border-bottom: 1px solid var(--line); }
+.toolbar .t { font-weight: 700; font-size: 14px; }
+.toolbar .s { color: var(--muted); font-size: 12.5px; }
+.toolbar .sp { flex: 1; }
+.btn { border: 0; border-radius: 10px; padding: 8px 14px; font: 700 13px var(--font-body); cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+.btn svg { width: 15px; height: 15px; }
+.btn.primary { background: linear-gradient(135deg, var(--blue-600), var(--blue-900)); color: #fff; }
+.btn.line { background: #fff; color: var(--ink-1); box-shadow: inset 0 0 0 1px var(--line); }
+
+.sheet { width: 210mm; min-height: 297mm; margin: 24px auto 40px; background: #fff; box-shadow: 0 10px 40px rgba(11, 35, 80, .18); padding: 0 0 14mm; }
+.kop { color: #fff; padding: 12mm 14mm 9mm; background: radial-gradient(500px 160px at 100% 0%, rgba(110, 170, 245, .45), transparent 65%), linear-gradient(120deg, var(--blue-950), var(--blue-900) 55%, #1650a4); display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; }
+.kop .mark { width: 44px; height: 44px; border-radius: 11px; display: grid; place-items: center; background: #fff; color: var(--blue-900); font-weight: 800; font-size: 20px; }
+.kop .co { font-size: 17px; font-weight: 700; letter-spacing: .02em; }
+.kop .doc { color: #c3d4ee; font-size: 12.5px; }
+.kop .meta { text-align: right; font-size: 11.5px; color: #c3d4ee; }
+.kop .meta b { color: #fff; font-size: 12.5px; }
+.body { padding: 8mm 14mm 0; }
+h2 { font-size: 13.5px; margin: 7mm 0 3mm; display: flex; align-items: center; gap: 8px; color: var(--blue-900); }
+h2 span { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; background: var(--blue-50); color: var(--blue-700); font-size: 12px; }
+h2:first-child { margin-top: 0; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.kpis div { padding: 9px 12px; border-right: 1px solid var(--line); }
+.kpis div:last-child { border-right: 0; }
+.kpis span { display: block; color: var(--muted); font-size: 11.5px; }
+.kpis b { font-size: 19px; }
+.kpis .crit b { color: var(--critical); }
+.summary-text { margin: 3mm 0 0; color: var(--ink-2); }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; padding: 6px 7px; border-bottom: 1.5px solid var(--blue-900); }
+td { padding: 6px 7px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.num, th.num { text-align: right; }
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px; border-radius: 4px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.tag svg { width: 11px; height: 11px; }
+.tag.critical { background: var(--critical-bg); color: #8f1f1f; } .tag.critical svg { color: var(--critical); }
+.tag.warning { background: var(--warning-bg); color: #6e4b00; } .tag.warning svg { color: var(--warning); }
+.two { display: grid; grid-template-columns: 1.15fr 1fr; gap: 8mm; margin-top: 7mm; }
+.sign { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8mm; margin-top: 10mm; text-align: center; font-size: 12px; color: var(--ink-2); }
+.sign .line { height: 18mm; border-bottom: 1px solid var(--ink-2); margin-bottom: 4px; }
+.sign b { color: var(--ink-1); display: block; }
+.foot { margin: 8mm 14mm 0; padding-top: 3mm; border-top: 1px solid var(--line); display: flex; justify-content: space-between; color: var(--muted); font-size: 10.5px; }
+.note { text-align: center; color: var(--muted); font-size: 12.5px; padding-bottom: 24px; }
+
+@media (max-width: 860px) { .sheet { width: auto; margin: 12px; min-height: 0; } .two, .kpis { grid-template-columns: 1fr 1fr; } .kop { grid-template-columns: auto 1fr; } .kop .meta { grid-column: span 2; text-align: left; } }
+@page { size: A4; margin: 0; }
+@media print {
+    body { background: #fff; }
+    .toolbar, .note { display: none; }
+    .sheet { margin: 0; box-shadow: none; width: 210mm; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-print" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2M7 14h10v7H7z"/></symbol>
+    <symbol id="i-sheet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+</svg>
+
+<div class="toolbar">
+    <div><div class="t">Pratinjau laporan harian</div><div class="s">Laporan monitoring dan prioritas produksi, 9 Oktober 2026</div></div>
+    <span class="sp"></span>
+    <button class="btn line"><svg><use href="#i-sheet"/></svg>Unduh Excel</button>
+    <button class="btn primary" onclick="window.print()"><svg><use href="#i-print"/></svg>Cetak atau simpan PDF</button>
+</div>
+
+<article class="sheet">
+    <header class="kop">
+        <span class="mark">W</span>
+        <div><div class="co">PT. WEBA INTERNATIONAL</div><div class="doc">Laporan Monitoring dan Prioritas Produksi</div></div>
+        <div class="meta"><b id="m-date"></b><br>Data per 08.42 WIB<br>Dibuat oleh Admin Weba</div>
+    </header>
+
+    <div class="body">
+        <h2><span>1</span>Ringkasan</h2>
+        <div class="kpis" id="kpis"></div>
+        <p class="summary-text" id="summary-text"></p>
+
+        <h2><span>2</span>Prioritas penyelesaian, 10 teratas (metode SAW)</h2>
+        <table>
+            <thead><tr><th>#</th><th>Order</th><th>Artikel</th><th class="num">Qty</th><th>Deadline</th><th class="num">Progres</th><th class="num">Bahan</th><th class="num">Skor</th></tr></thead>
+            <tbody id="prio"></tbody>
+        </table>
+
+        <div class="two">
+            <section>
+                <h2><span>3</span>Order yang perlu perhatian</h2>
+                <table>
+                    <thead><tr><th>Order</th><th>Deadline</th><th class="num">Progres</th><th class="num">Peringkat</th></tr></thead>
+                    <tbody id="att"></tbody>
+                </table>
+            </section>
+            <section>
+                <h2><span>4</span>Sisa beban kerja per work center</h2>
+                <div id="wc"></div>
+            </section>
+        </div>
+
+        <h2><span>5</span>Bobot kriteria yang dipakai</h2>
+        <table>
+            <thead><tr><th>Kode</th><th>Kriteria</th><th>Jenis</th><th class="num">Bobot</th></tr></thead>
+            <tbody id="crit"></tbody>
+        </table>
+
+        <div class="sign">
+            <div><div>Disiapkan oleh</div><div class="line"></div><b>PPIC</b></div>
+            <div><div>Diperiksa oleh</div><div class="line"></div><b>Supervisor Produksi</b></div>
+            <div><div>Disetujui oleh</div><div class="line"></div><b>Manajer Produksi</b></div>
+        </div>
+    </div>
+    <div class="foot"><span>Dicetak dari Weba ERP. Skor SAW dari evaluasi terakhir.</span><span>Halaman 1 dari 1</span></div>
+</article>
+<p class="note">Mockup tampilan. Data demo PT. Weba International.</p>
+
+<script src="data.js"></script>
+<script src="charts.js"></script>
+<script>
+(function () {
+    const W = window.WEBA, f = W.fmt, C = window.WebaCharts;
+    const $ = (id) => document.getElementById(id);
+
+    $('m-date').textContent = f.longDate(W.today);
+    $('kpis').innerHTML = `
+        <div><span>Order aktif</span><b class="tnum">${W.kpi.active}</b></div>
+        <div class="crit"><span>Terlambat</span><b class="tnum">${W.kpi.late}</b></div>
+        <div><span>Jatuh tempo 3 hari</span><b class="tnum">${W.kpi.dueSoon}</b></div>
+        <div><span>Rata-rata progres</span><b class="tnum">${f.pct(W.kpi.avgProgress)}</b></div>`;
+    $('summary-text').textContent = `Terdapat ${W.kpi.active} order aktif (${f.int(W.kpi.pairs)} pasang, nilai pesanan ${f.rupiahShort(W.kpi.activeValue)}). `
+        + `${W.kpi.late} order melewati deadline dan ${W.kpi.dueSoon} order jatuh tempo dalam 3 hari. `
+        + `Sisa beban kerja ${f.one(W.kpi.remainingHours)} jam, terbesar di tahap Finishing. ${W.kpi.materialReady} dari ${W.kpi.active} order sudah mendapat bahan penuh.`;
+
+    const tag = (o) => o.isLate
+        ? `<span class="tag critical"><svg><use href="#i-alert"/></svg>${f.daysLeft(o)}</span>`
+        : o.isDueSoon ? `<span class="tag warning"><svg><use href="#i-clock"/></svg>${f.daysLeft(o)}</span>` : f.date(o.deadline);
+
+    $('prio').innerHTML = W.orders.slice(0, 10).map((o) => `
+        <tr><td class="tnum"><b>${o.rank}</b></td><td class="mono">${o.ref}</td><td>${o.product}</td><td class="num tnum">${f.int(o.qty)}</td>
+        <td>${tag(o)}</td><td class="num tnum">${o.progress}%</td><td class="num tnum">${o.material}%</td><td class="num mono">${f.score(o.score)}</td></tr>`).join('');
+
+    const att = W.orders.filter((o) => o.isLate || o.isDueSoon).sort((a, b) => a.daysLeft - b.daysLeft);
+    $('att').innerHTML = att.map((o) => `
+        <tr><td class="mono">${o.ref.replace('WEBA/', '')}</td><td>${tag(o)}</td><td class="num tnum">${o.progress}%</td><td class="num tnum">${o.rank}</td></tr>`).join('');
+
+    C.hbar($('wc'), W.stages.map((s) => ({ label: s.name, value: s.hours, valueLabel: f.one(s.hours) + ' jam', tip: `<b>${s.full}</b><br>${f.one(s.hours)} jam tersisa` })), { labelWidth: 74, valueWidth: 66, row: 30, thickness: 13, font: 11.5 });
+
+    $('crit').innerHTML = W.criteria.map((c) => `<tr><td class="mono">${c.code}</td><td>${c.name}</td><td>${c.type === 'cost' ? 'Cost (makin kecil makin prioritas)' : 'Benefit (makin besar makin prioritas)'}</td><td class="num tnum">${f.one(c.weight * 100)}%</td></tr>`).join('');
+})();
+</script>
+</body>
+</html>

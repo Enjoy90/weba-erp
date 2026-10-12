@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 1, Ringkasan Eksekutif | Weba ERP</title>
+<style>
+/* Layout: pita header bergradasi biru tua, kartu KPI menumpang di tepi bawahnya, lalu grid 12 kolom berisi kartu putih. */
+:root {
+    --font-body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", monospace;
+    --page: #f3f6fb;
+    --card: #ffffff;
+    --ink-1: #0b1a33;
+    --ink-2: #4a5873;
+    --muted: #7a879e;
+    --line: #e2e8f1;
+    --blue-950: #071a3d;
+    --blue-900: #0b2350;
+    --blue-700: #1c5cab;
+    --blue-600: #2a78d6;
+    --blue-50: #eef4fc;
+    --bar: #2a78d6;
+    --track: #e7eef8;
+    --critical: #d03b3b;
+    --critical-bg: #fdecec;
+    --warning: #fab219;
+    --warning-bg: #fff6e0;
+    --good: #0ca30c;
+    --s-draft: #86b6ef; --s-confirmed: #5598e7; --s-progress: #2a78d6; --s-to_close: #1c5cab; --s-done: #104281;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink-1); font: 14px/1.5 var(--font-body); -webkit-font-smoothing: antialiased; }
+.tnum, td.num { font-variant-numeric: tabular-nums; }
+a { color: inherit; text-decoration: none; }
+
+.band {
+    background:
+        radial-gradient(1200px 380px at 85% -40%, rgba(77, 150, 240, .55), transparent 60%),
+        linear-gradient(135deg, var(--blue-950) 0%, var(--blue-900) 38%, #123f86 72%, var(--blue-700) 100%);
+    color: #eaf2ff;
+    padding: 0 clamp(16px, 3vw, 40px) 88px;
+}
+.topbar { display: flex; align-items: center; gap: 28px; height: 64px; border-bottom: 1px solid rgba(255, 255, 255, .1); }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .01em; }
+.mark { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(140deg, #ffffff, #b9d4f7); color: var(--blue-900); display: grid; place-items: center; font-weight: 800; font-size: 15px; }
+.nav { display: flex; gap: 4px; flex: 1; overflow-x: auto; }
+.nav a { padding: 7px 12px; border-radius: 8px; color: #b8cbe8; font-weight: 500; white-space: nowrap; }
+.nav a:hover { color: #fff; background: rgba(255, 255, 255, .08); }
+.nav a.on { color: #fff; background: rgba(255, 255, 255, .14); }
+.user { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #cfdcf2; white-space: nowrap; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: #e8f0fc; color: var(--blue-900); display: grid; place-items: center; font-weight: 700; font-size: 12px; }
+
+.title-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px; padding-top: 30px; }
+.eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #9fbbe4; font-weight: 600; }
+h1 { margin: 6px 0 4px; font-size: clamp(24px, 3vw, 32px); font-weight: 700; letter-spacing: -.01em; }
+.sub { color: #b8cbe8; }
+.actions { display: flex; gap: 10px; }
+.btn { border: 0; border-radius: 10px; padding: 10px 16px; font: 600 13.5px var(--font-body); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.btn-light { background: #fff; color: var(--blue-900); }
+.btn-ghost { background: rgba(255, 255, 255, .1); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); }
+.btn svg { width: 16px; height: 16px; }
+
+main { padding: 0 clamp(16px, 3vw, 40px) 40px; margin-top: -60px; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.kpi { background: var(--card); border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 2px rgba(11, 26, 51, .06), 0 10px 28px rgba(11, 35, 80, .08); }
+.kpi .label { color: var(--ink-2); font-weight: 500; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+.kpi .value { font-size: 34px; font-weight: 700; letter-spacing: -.02em; margin-top: 6px; line-height: 1.1; }
+.kpi .value small { font-size: 15px; font-weight: 600; color: var(--muted); margin-left: 4px; }
+.kpi .foot { margin-top: 8px; font-size: 12.5px; color: var(--muted); }
+.flag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px 3px 7px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.flag svg { width: 14px; height: 14px; }
+.flag.critical { background: var(--critical-bg); color: #9c2121; }
+.flag.critical svg { color: var(--critical); }
+.flag.warning { background: var(--warning-bg); color: #7a5300; }
+.flag.warning svg { color: #c98500; }
+.meter { height: 8px; border-radius: 4px; background: var(--track); margin-top: 12px; overflow: hidden; }
+.meter i { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #5598e7, var(--blue-600)); }
+
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.card { background: var(--card); border-radius: 14px; border: 1px solid var(--line); padding: 18px 20px; min-width: 0; }
+.span-8 { grid-column: span 8; } .span-4 { grid-column: span 4; } .span-12 { grid-column: span 12; }
+.col { display: grid; gap: 16px; align-content: start; min-width: 0; }
+.late li { padding: 10px 12px; }
+.late .prod { font-size: 12px; }
+.card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.card h2 { margin: 0; font-size: 15.5px; font-weight: 700; }
+.card .meta { color: var(--muted); font-size: 12.5px; }
+.link { color: var(--blue-600); font-weight: 600; font-size: 13px; }
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 0 10px 10px; border-bottom: 1px solid var(--line); }
+td { padding: 11px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: var(--blue-50); }
+.rank { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-weight: 700; font-size: 13px; background: var(--blue-50); color: var(--blue-700); }
+.rank.top { background: linear-gradient(140deg, var(--blue-600), var(--blue-900)); color: #fff; }
+.ref { font-family: var(--font-mono); font-size: 12.5px; font-weight: 500; }
+.prod { color: var(--ink-2); font-size: 12.5px; }
+.score { display: flex; align-items: center; gap: 10px; min-width: 150px; }
+.score .num { font-family: var(--font-mono); font-size: 12.5px; width: 52px; }
+.score .bar { flex: 1; height: 8px; border-radius: 4px; background: var(--track); overflow: hidden; }
+.score .bar i { display: block; height: 100%; background: var(--blue-600); border-radius: 0 4px 4px 0; }
+.mini { display: flex; align-items: center; gap: 8px; }
+.mini .bar { width: 64px; height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+.mini .bar i { display: block; height: 100%; background: #5598e7; }
+.due { font-size: 12.5px; color: var(--ink-2); }
+
+.legend { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+.legend li { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); }
+.legend .sw { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.legend b { margin-left: auto; color: var(--ink-1); font-variant-numeric: tabular-nums; }
+.split { display: flex; gap: 12px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.split div { flex: 1; }
+.split .big { font-size: 22px; font-weight: 700; }
+.split .lbl { font-size: 12.5px; color: var(--muted); }
+
+.late { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.late li { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 12px; background: #fbfcfe; border: 1px solid var(--line); }
+.late .ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--critical-bg); color: var(--critical); }
+.late .ic svg { width: 18px; height: 18px; }
+.late .when { text-align: right; font-size: 12.5px; }
+.late .when b { display: block; color: #9c2121; font-size: 13px; }
+.note { margin-top: 22px; color: var(--muted); font-size: 12.5px; }
+
+@media (max-width: 1100px) {
+    .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .span-8, .span-4 { grid-column: span 12; }
+}
+@media (max-width: 560px) { .kpis { grid-template-columns: 1fr; } .nav { display: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14"/></symbol>
+</svg>
+
+<header class="band">
+    <div class="topbar">
+        <div class="brand"><span class="mark">W</span>Weba ERP</div>
+        <nav class="nav">
+            <a class="on" href="#">Dashboard</a><a href="#">Order produksi</a><a href="#">Work order</a>
+            <a href="#">Prioritas SAW</a><a href="#">Inventori</a><a href="#">Pembelian</a><a href="#">Laporan</a>
+        </nav>
+        <div class="user"><span class="avatar">AW</span>Admin Weba</div>
+    </div>
+    <div class="title-row">
+        <div>
+            <div class="eyebrow">Dashboard produksi</div>
+            <h1>Ringkasan produksi hari ini</h1>
+            <div class="sub" id="today"></div>
+        </div>
+        <div class="actions">
+            <button class="btn btn-ghost"><svg><use href="#i-down"/></svg>Unduh laporan</button>
+            <button class="btn btn-light"><svg><use href="#i-play"/></svg>Jalankan SAW</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="kpis">
+        <div class="kpi">
+            <div class="label">Order aktif</div>
+            <div class="value" id="k-active"></div>
+            <div class="foot" id="k-active-foot"></div>
+        </div>
+        <div class="kpi">
+            <div class="label">Order terlambat <span class="flag critical"><svg><use href="#i-alert"/></svg>Perlu tindakan</span></div>
+            <div class="value" id="k-late"></div>
+            <div class="foot">Melewati deadline dan belum selesai</div>
+        </div>
+        <div class="kpi">
+            <div class="label">Jatuh tempo 3 hari <span class="flag warning"><svg><use href="#i-clock"/></svg>Pantau</span></div>
+            <div class="value" id="k-due"></div>
+            <div class="foot">Deadline hari ini sampai 3 hari ke depan</div>
+        </div>
+        <div class="kpi">
+            <div class="label">Rata-rata progres</div>
+            <div class="value" id="k-progress"></div>
+            <div class="meter"><i id="k-progress-bar"></i></div>
+        </div>
+    </section>
+
+    <section class="grid">
+        <article class="card span-8">
+            <div class="card-head">
+                <div><h2>Prioritas penyelesaian (SAW)</h2><div class="meta" id="eval-meta"></div></div>
+                <a class="link" href="#">Lihat 23 order</a>
+            </div>
+            <table>
+                <thead><tr><th>#</th><th>Order</th><th>Deadline</th><th>Progres</th><th>Skor preferensi</th></tr></thead>
+                <tbody id="rank-body"></tbody>
+            </table>
+        </article>
+
+        <div class="span-4 col">
+        <article class="card">
+            <div class="card-head"><h2>Order terlambat</h2><a class="link" href="#">Semua</a></div>
+            <ul class="late" id="late-list"></ul>
+        </article>
+
+        <article class="card">
+            <div class="card-head"><h2>Order per status</h2><span class="meta" id="status-total"></span></div>
+            <div id="status-stack"></div>
+            <ul class="legend" id="status-legend"></ul>
+            <div class="split">
+                <div><div class="big" id="mat-ready"></div><div class="lbl">order dengan bahan lengkap</div></div>
+                <div><div class="big" id="pairs"></div><div class="lbl">pasang sedang diproduksi</div></div>
+            </div>
+        </article>
+        </div>
+
+        <article class="card span-12">
+            <div class="card-head"><div><h2>Sisa beban kerja per work center</h2><div class="meta">Jam kerja yang belum dikerjakan dari order aktif. Arahkan kursor ke batang untuk jumlah order per tahap.</div></div><span class="meta" id="hours-total"></span></div>
+            <div id="wc-chart"></div>
+        </article>
+    </section>
+    <p class="note">Mockup tampilan. Angka berasal dari data demo PT. Weba International (30 order produksi).</p>
+</main>
+
+<script src="data.js"></script>
+<script src="charts.js"></script>
+<script>
+(function () {
+    const W = window.WEBA, f = W.fmt, C = window.WebaCharts;
+    const $ = (id) => document.getElementById(id);
+
+    $('today').textContent = f.longDate(W.today) + ', data per 08.42 WIB';
+    $('k-active').innerHTML = W.kpi.active + '<small>order</small>';
+    $('k-active-foot').textContent = 'Dari ' + W.kpi.total + ' order produksi, ' + f.rupiahShort(W.kpi.activeValue) + ' nilai pesanan';
+    $('k-late').innerHTML = W.kpi.late + '<small>order</small>';
+    $('k-due').innerHTML = W.kpi.dueSoon + '<small>order</small>';
+    $('k-progress').textContent = f.pct(W.kpi.avgProgress);
+    $('k-progress-bar').style.width = W.kpi.avgProgress + '%';
+    $('eval-meta').textContent = W.evaluation.name + ', ' + W.evaluation.at + ', ' + W.criteria.length + ' kriteria';
+
+    $('rank-body').innerHTML = W.orders.slice(0, 8).map((o) => `
+        <tr>
+            <td><span class="rank ${o.rank <= 3 ? 'top' : ''}">${o.rank}</span></td>
+            <td><div class="ref">${o.ref}</div><div class="prod">${o.product}, ${f.int(o.qty)} pasang</div></td>
+            <td>${o.isLate
+                ? `<span class="flag critical"><svg><use href="#i-alert"/></svg>${f.daysLeft(o)}</span>`
+                : `<div>${f.date(o.deadline)}</div><div class="due">${f.daysLeft(o)}</div>`}</td>
+            <td><div class="mini"><span class="bar"><i style="width:${o.progress}%"></i></span><span class="tnum">${o.progress}%</span></div></td>
+            <td><div class="score"><span class="num">${f.score(o.score)}</span><span class="bar"><i style="width:${(o.score / W.orders[0].score) * 100}%"></i></span></div></td>
+        </tr>`).join('');
+
+    const total = W.statuses.reduce((s, x) => s + x.count, 0);
+    $('status-total').textContent = total + ' order';
+    C.stack($('status-stack'), W.statuses.map((s) => ({
+        label: s.label, value: s.count, color: `var(--s-${s.key})`,
+        tip: `<b>${s.label}</b><br>${s.count} order, ${Math.round((s.count / total) * 100)}%`,
+    })), { height: 20, title: 'proporsi order per status' });
+    $('status-legend').innerHTML = W.statuses.map((s) => `<li><span class="sw" style="background:var(--s-${s.key})"></span>${s.label}<b>${s.count}</b></li>`).join('');
+    $('mat-ready').textContent = W.kpi.materialReady + ' dari ' + W.kpi.active;
+    $('pairs').textContent = f.int(W.kpi.pairs);
+
+    $('hours-total').textContent = 'Total ' + f.one(W.kpi.remainingHours) + ' jam';
+    C.hbar($('wc-chart'), W.stages.map((s) => ({
+        label: s.name, value: s.hours, valueLabel: f.one(s.hours) + ' jam',
+        tip: `<b>${s.full}</b><br>${f.one(s.hours)} jam tersisa<br><span class="k">${s.queued} order menunggu, ${s.running} sedang berjalan</span>`,
+    })), { labelWidth: 96, valueWidth: 76, row: 38, thickness: 16, title: 'sisa beban kerja per work center' });
+
+    $('late-list').innerHTML = W.late.map((o) => `
+        <li>
+            <span class="ic"><svg><use href="#i-alert"/></svg></span>
+            <div><div class="ref">${o.ref}</div><div class="prod">${o.product}, progres ${o.progress}%, peringkat ${o.rank}</div></div>
+            <div class="when"><b>${Math.abs(o.daysLeft)} hari</b>deadline ${f.date(o.deadline)}</div>
+        </li>`).join('');
+})();
+</script>
+</body>
+</html>

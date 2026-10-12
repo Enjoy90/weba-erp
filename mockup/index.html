@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pilihan Desain Dashboard | Weba ERP</title>
+<style>
+/* Layout: kepala bergradasi biru, lalu lima kartu pilihan dengan pratinjau langsung (iframe diperkecil) dan tabel perbandingan. */
+:root {
+    --page: #f3f6fb; --ink-1: #0b1a33; --ink-2: #48566f; --muted: #7a879e; --line: #e1e7f0;
+    --blue-950: #071a3d; --blue-900: #0b2350; --blue-700: #1c5cab; --blue-600: #2a78d6; --blue-50: #edf3fc;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink-1); font: 15px/1.55 "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+header {
+    padding: 40px clamp(16px, 4vw, 56px) 96px; color: #eaf2ff;
+    background: radial-gradient(900px 300px at 90% -20%, rgba(77, 150, 240, .5), transparent 60%), linear-gradient(135deg, var(--blue-950), var(--blue-900) 45%, var(--blue-700));
+}
+header .eyebrow { font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: #9fbbe4; font-weight: 700; }
+header h1 { margin: 8px 0 8px; font-size: clamp(26px, 3.4vw, 38px); letter-spacing: -.01em; }
+header p { margin: 0; max-width: 68ch; color: #c3d4ee; }
+main { padding: 0 clamp(16px, 4vw, 56px) 48px; margin-top: -60px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 18px; }
+.card { background: #fff; border-radius: 16px; border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 28px rgba(11, 35, 80, .07); }
+.thumb { position: relative; height: 210px; overflow: hidden; background: #e9eff8; border-bottom: 1px solid var(--line); }
+.thumb iframe { position: absolute; top: 0; left: 0; width: 1440px; height: 1000px; border: 0; transform: scale(var(--s, .25)); transform-origin: 0 0; pointer-events: none; }
+.thumb .num { position: absolute; right: 12px; bottom: 12px; width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; font-weight: 800; color: #fff; background: linear-gradient(140deg, var(--blue-600), var(--blue-900)); box-shadow: 0 4px 12px rgba(11, 35, 80, .3); }
+.body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.body h2 { margin: 0; font-size: 18px; }
+.body p { margin: 0; color: var(--ink-2); font-size: 14px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { font-size: 12px; font-weight: 600; background: var(--blue-50); color: var(--blue-700); border-radius: 6px; padding: 2px 8px; }
+dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13.5px; }
+dt { color: var(--muted); }
+dd { margin: 0; }
+.open { margin-top: auto; display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 10px; background: var(--blue-900); color: #fff; font-weight: 700; font-size: 13.5px; text-decoration: none; }
+.open:hover { background: var(--blue-700); }
+.open:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 2px; }
+section.compare { margin-top: 28px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px; overflow-x: auto; }
+section.compare h2 { margin: 0 0 4px; font-size: 18px; }
+section.compare > p { margin: 0 0 14px; color: var(--ink-2); font-size: 14px; }
+table { width: 100%; border-collapse: collapse; min-width: 820px; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+td:first-child { font-weight: 700; white-space: nowrap; }
+.lvl { display: inline-flex; gap: 3px; vertical-align: middle; margin-right: 6px; }
+.lvl i { width: 8px; height: 8px; border-radius: 2px; background: #d5e2f4; }
+.lvl i.on { background: var(--blue-600); }
+.reco { margin-top: 18px; padding: 16px 18px; border-radius: 14px; background: var(--blue-50); border: 1px solid #cfe0f7; color: var(--ink-1); }
+.reco b { color: var(--blue-900); }
+footer { margin-top: 18px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+    <div class="eyebrow">Weba ERP, PT. Weba International</div>
+    <h1>Sepuluh pilihan desain Dashboard Produksi</h1>
+    <p>Semua mockup memakai data demo yang sama (30 order produksi, evaluasi SAW 23 order) supaya bisa dibandingkan dari tampilannya saja. Klik kartu untuk membuka versi penuh. Arahkan kursor ke grafik untuk melihat detail angka.</p>
+</header>
+
+<main>
+    <div class="cards" id="cards"></div>
+
+    <section class="compare">
+        <h2>Perbandingan singkat</h2>
+        <p>Usaha implementasi diukur terhadap struktur Filament 5 yang sudah dipakai project ini.</p>
+        <table>
+            <thead><tr><th>Desain</th><th>Paling cocok untuk</th><th>Kekuatan UX</th><th>Hal yang perlu diwaspadai</th><th>Usaha implementasi</th></tr></thead>
+            <tbody id="rows"></tbody>
+        </table>
+        <div class="reco"><b>Saran saya:</b> desain 5 sebagai halaman utama untuk PPIC dan supervisor, karena berorientasi tugas dan paling dekat dengan struktur Filament. Penjelasan peringkat dari desain 3 dipakai di halaman Hasil Evaluasi SAW, dan matriks dari desain 8 di bab pembahasan skripsi. Desain 10 menjadi format ekspor PDF. Desain 2, 6, 7, dan 9 bisa ditambahkan bertahap bila waktunya cukup.</div>
+    </section>
+    <footer>Mockup statis untuk diskusi tampilan. Belum terhubung ke aplikasi.</footer>
+</main>
+
+<script>
+(function () {
+    const designs = [
+        {
+            file: '01-ringkasan-eksekutif.html', name: 'Ringkasan Eksekutif',
+            desc: 'Pita header biru tua dengan kartu KPI di atasnya, lalu prioritas SAW, status order, beban work center, dan order terlambat dalam satu layar.',
+            tags: ['Pimpinan', 'Tema terang', 'Satu layar'],
+            who: 'Pimpinan dan manajer yang ingin gambaran cepat',
+            ux: 'Hierarki jelas: angka utama dulu, detail sesudahnya. Order terlambat diberi ikon dan label, bukan warna saja.',
+            watch: 'Lebih untuk dibaca daripada untuk bekerja; aksi per order masih sedikit.',
+            effort: 2,
+        },
+        {
+            file: '02-ruang-kontrol.html', name: 'Ruang Kontrol',
+            desc: 'Tema gelap navy bergradasi untuk layar TV lantai produksi. Jam berjalan, alur 5 tahap, dan urutan kerja berikutnya dengan huruf besar.',
+            tags: ['Layar TV', 'Tema gelap', 'Dibaca dari jauh'],
+            who: 'Supervisor dan operator di lantai produksi',
+            ux: 'Angka besar dan kontras tinggi, terbaca dari beberapa meter. Tidak butuh klik sama sekali.',
+            watch: 'Bukan untuk kerja harian di meja; perlu halaman terpisah dan mode layar penuh.',
+            effort: 3,
+        },
+        {
+            file: '03-pusat-keputusan-saw.html', name: 'Pusat Keputusan SAW',
+            desc: 'Ranking 23 order dengan grafik kontribusi 6 kriteria per baris. Klik baris untuk melihat alasan peringkatnya: nilai, normalisasi, bobot, dan kontribusi.',
+            tags: ['PPIC', 'Inti skripsi', 'Transparan'],
+            who: 'PPIC yang memutuskan urutan kerja, dan bahan presentasi sidang',
+            ux: 'Menjawab "kenapa order ini duluan" langsung di layar. Filter cepat dengan jumlah per kategori.',
+            watch: 'Padat informasi; perlu sedikit pengenalan untuk pengguna baru.',
+            effort: 3,
+        },
+        {
+            file: '04-alur-jadwal-produksi.html', name: 'Alur dan Jadwal Produksi',
+            desc: 'Pita 5 tahap produksi bergradasi biru menurut urutannya, timeline mulai sampai deadline seluruh order aktif, dan daftar yang perlu perhatian.',
+            tags: ['Supervisor', 'Timeline', 'Bottleneck'],
+            who: 'Supervisor dan perencana jadwal',
+            ux: 'Penumpukan di tahap tertentu langsung terlihat. Garis hari ini memudahkan membaca keterlambatan.',
+            watch: 'Timeline melebar; di layar kecil perlu digeser ke samping.',
+            effort: 4,
+        },
+        {
+            file: '05-panel-kerja-harian.html', name: 'Panel Kerja Harian',
+            desc: 'Sidebar biru seperti panel Filament. Dibuka dengan tiga tugas hari ini lengkap dengan tombol aksinya, lalu tab Prioritas, Work center, dan Status.',
+            tags: ['PPIC dan supervisor', 'Berorientasi tugas', 'Paling mudah dibuat'],
+            who: 'Pengguna harian yang perlu tahu apa yang dikerjakan sekarang',
+            ux: 'Mengubah data menjadi tindakan. Istilah teknis punya penjelasan saat kursor diarahkan. Aksi cepat per baris.',
+            watch: 'Grafik lebih sedikit; cocok dipadukan dengan desain lain untuk pimpinan.',
+            effort: 1,
+        },
+        {
+            file: '06-papan-kanban.html', name: 'Papan Kanban Produksi',
+            desc: 'Order sebagai kartu di 7 kolom: antre, lima tahap produksi, dan siap ditutup. Tiap kolom urut menurut peringkat SAW.',
+            tags: ['Supervisor', 'Visual', 'Cari dan saring'],
+            who: 'Supervisor yang mengatur aliran order antar tahap',
+            ux: 'Posisi setiap order terlihat sekaligus. Saklar "hanya yang perlu perhatian" dan kotak cari meredupkan kartu lain.',
+            watch: 'Banyak kolom; di layar kecil papan digeser ke samping.',
+            effort: 3,
+        },
+        {
+            file: '07-kalender-deadline.html', name: 'Kalender Deadline',
+            desc: 'Kalender Oktober mulai Senin. Deadline tampil di tanggalnya dengan warna dan ikon status. Klik tanggal untuk rincian order.',
+            tags: ['PPIC', 'Perencanaan', 'Familiar'],
+            who: 'PPIC dan bagian pengiriman yang menyusun jadwal',
+            ux: 'Format kalender sudah dikenal semua orang. Tanggal padat langsung terlihat; ringkasan minggu berjalan di samping.',
+            watch: 'Kurang cocok untuk melihat progres tiap tahap.',
+            effort: 2,
+        },
+        {
+            file: '08-matriks-prioritas.html', name: 'Matriks Prioritas',
+            desc: 'Grafik sebar skor SAW terhadap sisa hari ke deadline, dibagi empat kuadran keputusan, dilengkapi tabel datanya.',
+            tags: ['Analisis', 'Bahan skripsi', 'Empat kuadran'],
+            who: 'PPIC, dosen penguji, bab pembahasan',
+            ux: 'Menunjukkan bahwa SAW bukan sekadar mengurutkan deadline. Tiap kuadran punya saran tindakan.',
+            watch: 'Perlu dibaca sekali dua kali sebelum terbiasa.',
+            effort: 3,
+        },
+        {
+            file: '09-aplikasi-supervisor.html', name: 'Aplikasi Supervisor (HP)',
+            desc: 'Dua layar ponsel: beranda berisi urutan kerja dari SAW, dan detail order dengan langkah 5 tahap serta tombol aksi besar.',
+            tags: ['Ponsel', 'Lantai produksi', 'Sentuh'],
+            who: 'Supervisor yang bergerak di lantai produksi',
+            ux: 'Target sentuh besar, satu aksi utama per layar, menu bawah empat tujuan, termasuk pindai barcode.',
+            watch: 'Butuh tampilan responsif khusus di Filament atau aplikasi terpisah.',
+            effort: 4,
+        },
+        {
+            file: '10-laporan-harian-a4.html', name: 'Laporan Harian A4',
+            desc: 'Dashboard dalam bentuk dokumen resmi: kop PT. Weba, ringkasan, 10 prioritas SAW, perhatian, beban kerja, dan tanda tangan.',
+            tags: ['Pimpinan', 'Cetak dan PDF', 'Arsip'],
+            who: 'Pimpinan dan arsip harian, lampiran skripsi',
+            ux: 'Siap cetak atau simpan PDF dari tombol di atas. Tata letak mengikuti dokumen kantor yang dikenal.',
+            watch: 'Statis; bukan pengganti dashboard interaktif.',
+            effort: 2,
+        },
+    ];
+    const level = (n) => `<span class="lvl">${[1, 2, 3, 4, 5].map((i) => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>`;
+    const label = ['', 'Rendah', 'Rendah sampai sedang', 'Sedang', 'Sedang sampai tinggi', 'Tinggi'];
+
+    document.getElementById('cards').innerHTML = designs.map((d, i) => `
+        <article class="card">
+            <div class="thumb"><iframe src="${d.file}" title="Pratinjau ${d.name}" loading="lazy" tabindex="-1"></iframe><span class="num">${i + 1}</span></div>
+            <div class="body">
+                <h2>${d.name}</h2>
+                <p>${d.desc}</p>
+                <div class="tags">${d.tags.map((t) => `<span>${t}</span>`).join('')}</div>
+                <dl><dt>Untuk</dt><dd>${d.who}</dd><dt>Usaha</dt><dd>${level(d.effort)}${label[d.effort]}</dd></dl>
+                <a class="open" href="${d.file}">Buka desain ${i + 1}</a>
+            </div>
+        </article>`).join('');
+
+    const fit = (thumb) => thumb.style.setProperty('--s', String(thumb.clientWidth / 1440));
+    document.querySelectorAll('.thumb').forEach((thumb) => {
+        fit(thumb);
+        new ResizeObserver(() => fit(thumb)).observe(thumb);
+    });
+
+    document.getElementById('rows').innerHTML = designs.map((d, i) => `
+        <tr><td>${i + 1}. ${d.name}</td><td>${d.who}</td><td>${d.ux}</td><td>${d.watch}</td><td>${level(d.effort)}${label[d.effort]}</td></tr>`).join('');
+})();
+</script>
+</body>
+</html>

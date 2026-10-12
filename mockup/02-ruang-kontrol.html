@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 2, Ruang Kontrol Produksi | Weba ERP</title>
+<style>
+/* Layout: layar monitor lantai produksi (tema gelap tunggal). Header jam, baris angka utama, alur 5 tahap, lalu urutan kerja dan beban mesin. */
+:root {
+    color-scheme: dark;
+    --font-body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", monospace;
+    --bg-0: #040b1c;
+    --bg-1: #0a1d42;
+    --bg-2: #103375;
+    --panel: rgba(15, 34, 71, .78);
+    --panel-line: rgba(126, 174, 255, .16);
+    --ink-1: #f2f6fd;
+    --ink-2: #a9b9d6;
+    --muted: #7f93b8;
+    --bar: #3987e5;
+    --track: rgba(255, 255, 255, .07);
+    --critical: #e5484d;
+    --critical-ink: #ffb4b4;
+    --critical-bg: rgba(229, 72, 77, .16);
+    --warning: #fab219;
+    --warning-ink: #ffd88a;
+    --tip-bg: #f2f6fd;
+    --tip-fg: #0b1a33;
+    --s-draft: #256abf; --s-confirmed: #3987e5; --s-progress: #6da7ec; --s-to_close: #9ec5f4; --s-done: #cde2fb;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg-0); }
+body {
+    margin: 0; min-height: 100vh; color: var(--ink-1); font: 14px/1.5 var(--font-body); -webkit-font-smoothing: antialiased;
+    background:
+        linear-gradient(rgba(126, 174, 255, .045) 1px, transparent 1px) 0 0 / 100% 48px,
+        linear-gradient(90deg, rgba(126, 174, 255, .045) 1px, transparent 1px) 0 0 / 48px 100%,
+        radial-gradient(900px 500px at 100% 0%, rgba(42, 120, 214, .35), transparent 65%),
+        linear-gradient(165deg, var(--bg-0) 0%, var(--bg-1) 55%, var(--bg-2) 100%);
+    background-attachment: fixed;
+    padding: 22px clamp(16px, 2.4vw, 32px) 28px;
+}
+.tnum { font-variant-numeric: tabular-nums; }
+.panel { background: var(--panel); border: 1px solid var(--panel-line); border-radius: 16px; padding: 18px 20px; backdrop-filter: blur(6px); min-width: 0; }
+.ph { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.ph h2 { margin: 0; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); font-weight: 600; }
+.ph span { color: var(--muted); font-size: 12.5px; }
+
+header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px; margin-bottom: 20px; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.mark { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; font-size: 18px; color: #fff; background: linear-gradient(150deg, #3987e5, #104281); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); }
+.brand b { display: block; font-size: 17px; }
+.brand span { color: var(--muted); font-size: 12.5px; }
+.clock { text-align: center; }
+.clock .t { font-family: var(--font-mono); font-size: 40px; font-weight: 600; letter-spacing: .02em; line-height: 1; }
+.clock .d { color: var(--ink-2); font-size: 13px; margin-top: 6px; }
+.status { justify-self: end; text-align: right; font-size: 13px; color: var(--ink-2); }
+.status .live { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-1); font-weight: 600; }
+.status .live i { width: 8px; height: 8px; border-radius: 50%; background: #3fcf8e; box-shadow: 0 0 0 4px rgba(63, 207, 142, .18); }
+
+.row1 { display: grid; grid-template-columns: 1.25fr repeat(4, minmax(0, 1fr)); gap: 14px; }
+.hero { background: linear-gradient(150deg, rgba(229, 72, 77, .22), rgba(15, 34, 71, .85) 60%); border-color: rgba(229, 72, 77, .35); }
+.hero .lbl { display: flex; align-items: center; gap: 8px; color: var(--critical-ink); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+.hero .lbl svg { width: 18px; height: 18px; color: var(--critical); }
+.hero .num { font-size: 64px; font-weight: 700; line-height: 1; margin: 10px 0 6px; }
+.hero .num small { font-size: 18px; font-weight: 500; color: var(--ink-2); margin-left: 8px; }
+.hero ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+.hero li { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--ink-2); border-top: 1px solid rgba(255, 255, 255, .08); padding-top: 6px; }
+.hero li b { font-family: var(--font-mono); color: var(--ink-1); font-weight: 600; }
+.stat { display: flex; flex-direction: column; }
+.stat .extra { margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, .08); display: grid; gap: 6px; font-size: 12.5px; color: var(--ink-2); }
+.stat .extra .row { display: flex; justify-content: space-between; gap: 8px; }
+.stat .extra .row b { font-family: var(--font-mono); color: var(--ink-1); font-weight: 600; }
+.stat .foot, .stat .warn { margin-bottom: 14px; }
+.meter { height: 8px; border-radius: 4px; background: var(--track); overflow: hidden; }
+.meter i { display: block; height: 100%; border-radius: 4px; background: var(--bar); }
+.stat .lbl { color: var(--ink-2); font-size: 12.5px; font-weight: 500; }
+.stat .num { font-size: 34px; font-weight: 600; margin-top: 8px; line-height: 1.1; }
+.stat .num small { font-size: 14px; color: var(--muted); font-weight: 500; margin-left: 4px; }
+.stat .foot { color: var(--muted); font-size: 12.5px; margin-top: 6px; }
+.stat .warn { display: inline-flex; align-items: center; gap: 6px; color: var(--warning-ink); font-size: 12.5px; margin-top: 6px; }
+.stat .warn svg { width: 14px; height: 14px; color: var(--warning); }
+
+.flow { margin-top: 14px; }
+.stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, .8fr); gap: 10px; }
+.stage { position: relative; border-radius: 12px; padding: 14px 16px; background: rgba(4, 11, 28, .45); border: 1px solid var(--panel-line); }
+.stage::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; border-radius: 12px 12px 0 0; background: var(--c); }
+.stage .n { font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+.stage .name { font-weight: 600; font-size: 15px; margin-top: 2px; }
+.stage .q { font-size: 38px; font-weight: 700; line-height: 1.05; margin-top: 8px; }
+.stage .q small { font-size: 13px; color: var(--muted); font-weight: 500; margin-left: 4px; }
+.stage .run { margin-top: 6px; font-size: 12.5px; color: var(--ink-2); display: flex; align-items: center; gap: 6px; }
+.stage .run i { width: 7px; height: 7px; border-radius: 50%; background: #3fcf8e; }
+.stage .run i.off { background: rgba(255, 255, 255, .2); }
+.stage .h { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, .08); font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-2); }
+.stage.close { background: linear-gradient(150deg, rgba(57, 135, 229, .18), rgba(4, 11, 28, .45)); }
+.arrow { position: absolute; right: -9px; top: 50%; width: 8px; height: 14px; color: rgba(158, 197, 244, .5); transform: translateY(-50%); }
+
+.row3 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px; margin-top: 14px; }
+.next { display: grid; gap: 8px; }
+.item { display: grid; grid-template-columns: 52px 1fr 170px 150px; gap: 16px; align-items: center; padding: 12px 14px; border-radius: 12px; background: rgba(4, 11, 28, .4); border: 1px solid transparent; }
+.item:hover { border-color: var(--panel-line); }
+.item .r { font-size: 26px; font-weight: 700; color: var(--ink-2); text-align: center; }
+.item.top .r { color: #fff; background: linear-gradient(150deg, #3987e5, #104281); border-radius: 10px; padding: 4px 0; }
+.item .ref { font-family: var(--font-mono); font-size: 15px; font-weight: 600; }
+.item .sub { color: var(--muted); font-size: 12.5px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border-radius: 999px; font-size: 12.5px; font-weight: 600; }
+.badge svg { width: 14px; height: 14px; }
+.badge.critical { background: var(--critical-bg); color: var(--critical-ink); }
+.badge.critical svg { color: var(--critical); }
+.badge.warning { background: rgba(250, 178, 25, .14); color: var(--warning-ink); }
+.badge.warning svg { color: var(--warning); }
+.badge.ok { background: rgba(255, 255, 255, .06); color: var(--ink-2); }
+.sc { display: flex; align-items: center; gap: 10px; }
+.sc .v { font-family: var(--font-mono); font-size: 14px; width: 56px; }
+.sc .b { flex: 1; height: 8px; border-radius: 4px; background: var(--track); overflow: hidden; }
+.sc .b i { display: block; height: 100%; background: var(--bar); border-radius: 0 4px 4px 0; }
+.side { display: grid; gap: 14px; }
+.legend { list-style: none; margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+.legend li { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-2); }
+.legend .sw { width: 10px; height: 10px; border-radius: 3px; }
+.legend b { margin-left: auto; color: var(--ink-1); font-variant-numeric: tabular-nums; }
+footer { margin-top: 16px; color: var(--muted); font-size: 12px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 1200px) {
+    .row1 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero { grid-column: span 2; }
+    .stages { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .row3 { grid-template-columns: 1fr; }
+    .arrow { display: none; }
+}
+@media (max-width: 640px) {
+    header { grid-template-columns: 1fr; text-align: left; }
+    .status { justify-self: start; text-align: left; }
+    .item { grid-template-columns: 40px 1fr; }
+    .item .sc, .item > div:nth-child(3) { grid-column: 2; }
+    .stages { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m1 1 6 6-6 6"/></symbol>
+</svg>
+
+<header>
+    <div class="brand"><span class="mark">W</span><div><b>Ruang Kontrol Produksi</b><span>PT. Weba International, lantai produksi</span></div></div>
+    <div class="clock"><div class="t tnum" id="clock">08:42:00</div><div class="d" id="date"></div></div>
+    <div class="status"><div class="live"><i></i>Data langsung</div><div>Shift 1, 07.00 sampai 15.00</div><div>Diperbarui tiap 30 detik</div></div>
+</header>
+
+<section class="row1">
+    <div class="panel hero">
+        <div class="lbl"><svg><use href="#i-alert"/></svg>Order terlambat</div>
+        <div class="num" id="late-num"></div>
+        <ul id="late-list"></ul>
+    </div>
+    <div class="panel stat"><div class="lbl">Order aktif</div><div class="num" id="s-active"></div><div class="foot" id="s-active-foot"></div><div class="extra"><div id="x-active-bar"></div><div id="x-active"></div></div></div>
+    <div class="panel stat"><div class="lbl">Jatuh tempo 3 hari</div><div class="num" id="s-due"></div><div class="warn"><svg><use href="#i-clock"/></svg>Pantau jadwal</div><div class="extra" id="x-due"></div></div>
+    <div class="panel stat"><div class="lbl">Rata-rata progres</div><div class="num" id="s-progress"></div><div class="foot">Dari seluruh order aktif</div><div class="extra"><div class="meter"><i id="x-progress"></i></div><div id="x-progress-t"></div></div></div>
+    <div class="panel stat"><div class="lbl">Sisa beban kerja</div><div class="num" id="s-hours"></div><div class="foot">Jam mesin dan operator</div><div class="extra" id="x-hours"></div></div>
+</section>
+
+<section class="panel flow">
+    <div class="ph"><h2>Alur produksi</h2><span>Jumlah order yang sedang menunggu atau dikerjakan di tiap tahap</span></div>
+    <div class="stages" id="stages"></div>
+</section>
+
+<section class="row3">
+    <div class="panel">
+        <div class="ph"><h2>Urutan kerja berikutnya</h2><span id="eval-meta"></span></div>
+        <div class="next" id="next"></div>
+    </div>
+    <div class="side">
+        <div class="panel"><div class="ph"><h2>Beban work center</h2><span>jam tersisa</span></div><div id="wc"></div></div>
+        <div class="panel"><div class="ph"><h2>Status order</h2><span id="st-total"></span></div><div id="st"></div><ul class="legend" id="st-legend"></ul></div>
+    </div>
+</section>
+
+<footer><span>Mockup tampilan untuk layar TV di lantai produksi. Data demo, 30 order produksi.</span><span>Weba ERP</span></footer>
+
+<script src="data.js"></script>
+<script src="charts.js"></script>
+<script>
+(function () {
+    const W = window.WEBA, f = W.fmt, C = window.WebaCharts;
+    const $ = (id) => document.getElementById(id);
+
+    const tick = () => {
+        const now = new Date();
+        $('clock').textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).replace(/\./g, ':');
+    };
+    tick();
+    setInterval(tick, 1000);
+    $('date').textContent = f.longDate(W.today);
+
+    $('late-num').innerHTML = W.kpi.late + '<small>dari ' + W.kpi.active + ' order aktif</small>';
+    $('late-list').innerHTML = W.late.map((o) => `<li><b>${o.ref.replace('WEBA/', '')}</b><span>${o.product}</span><span>${Math.abs(o.daysLeft)} hari</span></li>`).join('');
+    $('s-active').innerHTML = W.kpi.active + '<small>order</small>';
+    $('s-active-foot').textContent = f.int(W.kpi.pairs) + ' pasang dalam produksi';
+    $('s-due').innerHTML = W.kpi.dueSoon + '<small>order</small>';
+    $('s-progress').textContent = f.pct(W.kpi.avgProgress);
+    $('s-hours').innerHTML = f.one(W.kpi.remainingHours) + '<small>jam</small>';
+
+    const activeStates = W.statuses.filter((s) => ['confirmed', 'progress', 'to_close'].includes(s.key));
+    C.stack($('x-active-bar'), activeStates.map((s) => ({ label: s.label, value: s.count, color: `var(--s-${s.key})`, tip: `<b>${s.label}</b><br>${s.count} order` })), { height: 8 });
+    $('x-active').textContent = activeStates.map((s) => s.count + ' ' + s.label.toLowerCase()).join(', ');
+    const due = W.orders.filter((o) => o.isDueSoon).sort((a, b) => a.daysLeft - b.daysLeft);
+    $('x-due').innerHTML = due.slice(0, 4).map((o) => `<div class="row"><b>${o.ref.replace('WEBA/', '')}</b><span>${o.daysLeft === 0 ? 'hari ini' : o.daysLeft + ' hari'}</span></div>`).join('') + (due.length > 4 ? `<div>${due.length - 4} order lainnya</div>` : '');
+    $('x-progress').style.width = W.kpi.avgProgress + '%';
+    $('x-progress-t').textContent = W.orders.filter((o) => o.progress >= 100).length + ' order sudah 100%, ' + W.orders.filter((o) => o.progress === 0).length + ' belum mulai';
+    const heavy = [...W.stages].sort((a, b) => b.hours - a.hours);
+    $('x-hours').innerHTML = `<div class="row"><span>Terberat</span><b>${heavy[0].name} ${f.one(heavy[0].hours)}</b></div><div class="row"><span>Teringan</span><b>${heavy[heavy.length - 1].name} ${f.one(heavy[heavy.length - 1].hours)}</b></div>`;
+
+    const ramp = ['#256abf', '#3987e5', '#6da7ec', '#9ec5f4', '#cde2fb'];
+    const closing = W.orders.filter((o) => o.state === 'to_close').length;
+    $('stages').innerHTML = W.stages.map((s, i) => `
+        <div class="stage" style="--c:${ramp[i]}">
+            <div class="n">Tahap ${i + 1}</div>
+            <div class="name">${s.name}</div>
+            <div class="q tnum">${s.queued}<small>order</small></div>
+            <div class="run"><i class="${s.running ? '' : 'off'}"></i>${s.running ? s.running + ' sedang berjalan' : 'tidak ada yang berjalan'}</div>
+            <div class="h">${f.one(s.hours)} jam tersisa</div>
+            <svg class="arrow"><use href="#i-chev"/></svg>
+        </div>`).join('') + `
+        <div class="stage close" style="--c:#cde2fb">
+            <div class="n">Selesai produksi</div>
+            <div class="name">Siap ditutup</div>
+            <div class="q tnum">${closing}<small>order</small></div>
+            <div class="run"><i class="off"></i>menunggu penutupan</div>
+            <div class="h">0,0 jam tersisa</div>
+        </div>`;
+
+    $('eval-meta').textContent = 'Ranking SAW, ' + W.evaluation.at;
+    $('next').innerHTML = W.orders.slice(0, 6).map((o) => {
+        const badge = o.isLate
+            ? `<span class="badge critical"><svg><use href="#i-alert"/></svg>${f.daysLeft(o)}</span>`
+            : o.isDueSoon
+                ? `<span class="badge warning"><svg><use href="#i-clock"/></svg>${f.daysLeft(o)}</span>`
+                : `<span class="badge ok">${f.daysLeft(o)}</span>`;
+        return `<div class="item ${o.rank <= 3 ? 'top' : ''}">
+            <div class="r tnum">${o.rank}</div>
+            <div><div class="ref">${o.ref}</div><div class="sub">${o.product}, ${f.int(o.qty)} pasang, tahap ${Math.min(o.done + 1, 5)} dari 5</div></div>
+            <div>${badge}</div>
+            <div class="sc"><span class="v">${f.score(o.score)}</span><span class="b"><i style="width:${(o.score / W.orders[0].score) * 100}%"></i></span></div>
+        </div>`;
+    }).join('');
+
+    C.hbar($('wc'), W.stages.map((s) => ({
+        label: s.name, value: s.hours, valueLabel: f.one(s.hours),
+        tip: `<b>${s.full}</b><br>${f.one(s.hours)} jam tersisa, ${s.queued} order di tahap ini`,
+    })), { labelWidth: 84, valueWidth: 52, row: 34, thickness: 14, color: 'var(--bar)', title: 'beban work center' });
+
+    const total = W.statuses.reduce((s, x) => s + x.count, 0);
+    $('st-total').textContent = total + ' order';
+    C.stack($('st'), W.statuses.map((s) => ({ label: s.label, value: s.count, color: `var(--s-${s.key})`, tip: `<b>${s.label}</b><br>${s.count} order` })), { height: 18 });
+    $('st-legend').innerHTML = W.statuses.map((s) => `<li><span class="sw" style="background:var(--s-${s.key})"></span>${s.label}<b>${s.count}</b></li>`).join('');
+})();
+</script>
+</body>
+</html>

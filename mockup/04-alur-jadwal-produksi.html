@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 4, Alur dan Jadwal Produksi | Weba ERP</title>
+<style>
+/* Layout: rel ikon navy di kiri; konten berisi pita 5 tahap produksi (gradasi biru ordinal), timeline deadline seluruh order aktif, dan kolom samping jatuh tempo. */
+:root {
+    --font-body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", monospace;
+    --page: #f1f5fa;
+    --card: #ffffff;
+    --ink-1: #0b1a33;
+    --ink-2: #47556e;
+    --muted: #7a879e;
+    --line: #dfe6f0;
+    --grid: #e7edf5;
+    --blue-950: #061633;
+    --blue-900: #0b2350;
+    --blue-600: #2a78d6;
+    --blue-50: #ecf3fc;
+    --g-track: #d5e5f9;
+    --g-fill: #2a78d6;
+    --today: #0b2350;
+    --critical: #d03b3b; --critical-bg: #fdecec; --critical-ink: #9c2121;
+    --warning: #c98500; --warning-bg: #fff4d9; --warning-ink: #7a5300;
+    --good: #0a8a0a; --good-bg: #e6f6e6;
+    --st-1: #86b6ef; --st-2: #5598e7; --st-3: #2a78d6; --st-4: #1c5cab; --st-5: #104281;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink-1); font: 15px/1.5 var(--font-body); -webkit-font-smoothing: antialiased; display: grid; grid-template-columns: 68px minmax(0, 1fr); min-height: 100vh; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+.rail { background: linear-gradient(180deg, var(--blue-950), var(--blue-900) 60%, #123f86); display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 0; position: sticky; top: 0; height: 100vh; }
+.rail .mark { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; color: var(--blue-900); font-weight: 700; font-size: 17px; background: linear-gradient(140deg, #fff, #b9d4f7); margin-bottom: 14px; }
+.rail a { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; color: #8fa9d3; }
+.rail a svg { width: 20px; height: 20px; }
+.rail a:hover { background: rgba(255, 255, 255, .08); color: #fff; }
+.rail a.on { background: rgba(255, 255, 255, .14); color: #fff; }
+.rail .sp { flex: 1; }
+.rail .avatar { width: 34px; height: 34px; border-radius: 50%; background: #e8f0fc; color: var(--blue-900); display: grid; place-items: center; font-weight: 700; font-size: 12px; }
+
+.content { padding: 22px clamp(16px, 2.6vw, 34px) 36px; min-width: 0; }
+.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.top .eyebrow { font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--blue-600); font-weight: 700; }
+.top h1 { margin: 4px 0 2px; font-size: clamp(24px, 2.6vw, 30px); font-weight: 700; letter-spacing: -.01em; }
+.top .sub { color: var(--muted); }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.sel { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 14px; color: var(--ink-2); }
+.sel b { color: var(--ink-1); font-weight: 600; }
+.sel svg { width: 14px; height: 14px; color: var(--muted); }
+
+.pipeline { margin-top: 20px; border-radius: 18px; overflow: hidden; background: #fff; border: 1px solid var(--line); }
+.pipe-head { display: flex; justify-content: space-between; gap: 12px; padding: 16px 20px; flex-wrap: wrap; }
+.pipe-head h2 { margin: 0; font-size: 17px; }
+.pipe-head span { color: var(--muted); font-size: 14px; }
+.stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, .75fr); }
+.stage { position: relative; padding: 18px 20px 20px 26px; color: #fff; background: var(--c); min-height: 150px; }
+.stage.lightbg { color: var(--ink-1); }
+.stage:not(:last-child)::after { content: ""; position: absolute; right: -14px; top: 0; bottom: 0; width: 28px; z-index: 1; background: var(--c); clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%); }
+.stage .n { font-size: 12.5px; font-weight: 600; opacity: .8; letter-spacing: .08em; text-transform: uppercase; }
+.stage .name { font-size: 17px; font-weight: 700; }
+.stage .q { font-size: 40px; font-weight: 700; line-height: 1.05; margin-top: 8px; }
+.stage .q small { font-size: 14px; font-weight: 500; opacity: .8; margin-left: 4px; }
+.stage .meta { font-size: 13.5px; opacity: .88; margin-top: 4px; }
+.stage.done { background: #f4f8fe; color: var(--ink-1); border-left: 1px solid var(--line); }
+.stage.done .q { color: var(--blue-900); }
+.pipe-foot { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.pipe-foot div { padding: 14px 20px; border-right: 1px solid var(--line); }
+.pipe-foot div:last-child { border-right: 0; }
+.pipe-foot b { display: block; font-size: 22px; }
+.pipe-foot span { color: var(--muted); font-size: 13.5px; }
+
+.lower { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; margin-top: 16px; align-items: start; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; min-width: 0; }
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.card h2 { margin: 0; font-size: 17px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.legend i { display: inline-block; width: 18px; height: 10px; border-radius: 3px; }
+.legend i.line { width: 2px; height: 14px; border-radius: 1px; }
+.timeline { overflow-x: auto; }
+.timeline > div { min-width: 760px; }
+
+.due { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.due li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); }
+.due .ic { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; }
+.due .ic svg { width: 16px; height: 16px; }
+.due .ic.critical { background: var(--critical-bg); color: var(--critical); }
+.due .ic.warning { background: var(--warning-bg); color: var(--warning); }
+.due .ref { font-family: var(--font-mono); font-size: 13.5px; font-weight: 600; }
+.due .p { color: var(--muted); font-size: 13px; }
+.due .w { text-align: right; font-size: 13px; color: var(--ink-2); }
+.due .w b { display: block; font-size: 14px; }
+.due .w b.critical { color: var(--critical-ink); }
+.due .w b.warning { color: var(--warning-ink); }
+.ready { display: grid; gap: 10px; margin-top: 4px; }
+.ready > div { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 12px; background: #f8fafd; border: 1px solid var(--line); }
+.ready .ic { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; flex: none; }
+.ready .ic svg { width: 16px; height: 16px; }
+.ready .ok { background: var(--good-bg); color: var(--good); }
+.ready .wait { background: var(--warning-bg); color: var(--warning); }
+.ready b { font-size: 20px; }
+.ready span { color: var(--ink-2); font-size: 13.5px; }
+.note { margin-top: 18px; color: var(--muted); font-size: 13px; }
+
+@media (max-width: 1180px) {
+    .stages { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .stage::after { display: none; }
+    .lower { grid-template-columns: 1fr; }
+    .pipe-foot { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+    body { grid-template-columns: 1fr; }
+    .rail { display: none; }
+    .stages { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10m0 0-3-3m3 3-3 3M20 18H10m0 0 3-3m-3 3 3 3"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+    <symbol id="i-rank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V10m6 10V4m6 16v-7"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+</svg>
+
+<nav class="rail" aria-label="Navigasi">
+    <span class="mark">W</span>
+    <a class="on" href="#" title="Dashboard"><svg><use href="#i-grid"/></svg></a>
+    <a href="#" title="Order produksi"><svg><use href="#i-list"/></svg></a>
+    <a href="#" title="Alur produksi"><svg><use href="#i-flow"/></svg></a>
+    <a href="#" title="Prioritas SAW"><svg><use href="#i-rank"/></svg></a>
+    <a href="#" title="Inventori"><svg><use href="#i-box"/></svg></a>
+    <a href="#" title="Jadwal"><svg><use href="#i-cal"/></svg></a>
+    <span class="sp"></span>
+    <span class="avatar">AW</span>
+</nav>
+
+<div class="content">
+    <div class="top">
+        <div>
+            <div class="eyebrow">Dashboard produksi</div>
+            <h1>Alur dan jadwal produksi</h1>
+            <div class="sub" id="sub"></div>
+        </div>
+        <div class="filters">
+            <span class="sel"><svg><use href="#i-cal"/></svg>Periode <b>30 Sep sampai 30 Okt</b><svg><use href="#i-down"/></svg></span>
+            <span class="sel">Artikel <b>Semua</b><svg><use href="#i-down"/></svg></span>
+            <span class="sel">Work center <b>Semua</b><svg><use href="#i-down"/></svg></span>
+        </div>
+    </div>
+
+    <section class="pipeline">
+        <div class="pipe-head"><h2>Posisi order di lini produksi</h2><span>Order yang menunggu atau sedang dikerjakan di tiap tahap</span></div>
+        <div class="stages" id="stages"></div>
+        <div class="pipe-foot">
+            <div><b id="f-active"></b><span>order aktif</span></div>
+            <div><b id="f-pairs"></b><span>pasang dalam proses</span></div>
+            <div><b id="f-hours"></b><span>jam kerja tersisa</span></div>
+            <div><b id="f-progress"></b><span>rata-rata progres</span></div>
+        </div>
+    </section>
+
+    <section class="lower">
+        <article class="card">
+            <div class="card-head">
+                <h2>Timeline order aktif</h2>
+                <div class="legend">
+                    <span><i style="background:var(--g-track)"></i>Rentang jadwal</span>
+                    <span><i style="background:var(--g-fill)"></i>Progres</span>
+                    <span><i class="line" style="background:var(--critical)"></i>Deadline terlewat</span>
+                    <span><i class="line" style="background:var(--today)"></i>Hari ini</span>
+                </div>
+            </div>
+            <div class="timeline"><div id="gantt"></div></div>
+        </article>
+
+        <aside class="card">
+            <div class="card-head"><h2>Perlu perhatian</h2><span class="sub" id="att-count"></span></div>
+            <ul class="due" id="due"></ul>
+            <div class="card-head" style="margin-top:18px"><h2>Kesiapan bahan</h2></div>
+            <div class="ready">
+                <div><span class="ic ok"><svg><use href="#i-check"/></svg></span><div><b id="r-ok"></b><br><span>order bahannya sudah ter-reserve penuh</span></div></div>
+                <div><span class="ic wait"><svg><use href="#i-clock"/></svg></span><div><b id="r-wait"></b><br><span>order menunggu sebagian bahan (sol PU terbatas)</span></div></div>
+            </div>
+        </aside>
+    </section>
+    <p class="note">Mockup tampilan. Data demo PT. Weba International, diurutkan menurut deadline.</p>
+</div>
+
+<script src="data.js"></script>
+<script src="charts.js"></script>
+<script>
+(function () {
+    const W = window.WEBA, f = W.fmt, C = window.WebaCharts;
+    const $ = (id) => document.getElementById(id);
+
+    $('sub').textContent = f.longDate(W.today) + ', ' + W.kpi.active + ' order aktif, ' + W.kpi.late + ' terlambat';
+
+    const closing = W.orders.filter((o) => o.state === 'to_close').length;
+    $('stages').innerHTML = W.stages.map((s, i) => `
+        <div class="stage ${i === 0 ? 'lightbg' : ''}" style="--c:var(--st-${i + 1})">
+            <div class="n">Tahap ${i + 1}</div>
+            <div class="name">${s.name}</div>
+            <div class="q tnum">${s.queued}<small>order</small></div>
+            <div class="meta">${s.running ? s.running + ' sedang berjalan' : 'tidak ada yang berjalan'}, ${f.one(s.hours)} jam</div>
+        </div>`).join('') + `
+        <div class="stage done">
+            <div class="n">Selesai produksi</div>
+            <div class="name">Siap ditutup</div>
+            <div class="q tnum">${closing}<small>order</small></div>
+            <div class="meta">menunggu penutupan order</div>
+        </div>`;
+
+    $('f-active').textContent = W.kpi.active;
+    $('f-pairs').textContent = f.int(W.kpi.pairs);
+    $('f-hours').textContent = f.one(W.kpi.remainingHours);
+    $('f-progress').textContent = f.pct(W.kpi.avgProgress);
+
+    const byDeadline = [...W.orders].sort((a, b) => (a.deadline || '9999') < (b.deadline || '9999') ? -1 : 1);
+    C.gantt($('gantt'), byDeadline, { labelWidth: 210, today: W.today, fmt: (d) => f.date(d) });
+
+    const attention = W.orders.filter((o) => o.isLate || o.isDueSoon).sort((a, b) => a.daysLeft - b.daysLeft);
+    $('att-count').textContent = attention.length + ' order';
+    $('due').innerHTML = attention.map((o) => {
+        const kind = o.isLate ? 'critical' : 'warning';
+        return `<li>
+            <span class="ic ${kind}"><svg><use href="#i-${o.isLate ? 'alert' : 'clock'}"/></svg></span>
+            <div><div class="ref">${o.ref.replace('WEBA/', '')}</div><div class="p">${o.product.replace('Weba ', '')}, progres ${o.progress}%</div></div>
+            <div class="w"><b class="${kind}">${o.isLate ? 'Terlambat' : 'Segera'}</b>${f.daysLeft(o)}</div>
+        </li>`;
+    }).join('');
+    $('r-ok').textContent = W.kpi.materialReady;
+    $('r-wait').textContent = W.kpi.active - W.kpi.materialReady;
+})();
+</script>
+</body>
+</html>

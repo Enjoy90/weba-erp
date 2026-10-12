@@ -1,0 +1,60 @@
+/*
+ * Login and the other sign-in pages (forgot password, two-factor code): a blue
+ * gradient behind a white card. Only colors, shadow and size of the logo
+ * change; the font is the one of the project.
+ */
+.fi-simple-layout {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+        radial-gradient(60rem 40rem at 0% 0%, rgb(56 189 248 / 0.45), transparent 60%),
+        radial-gradient(50rem 35rem at 100% 100%, rgb(99 102 241 / 0.4), transparent 60%),
+        linear-gradient(135deg, #0b1f4d 0%, #1e40af 45%, #2563eb 70%, #0ea5e9 100%);
+}
+
+.fi-simple-layout::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgb(255 255 255 / 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+    pointer-events: none;
+}
+
+.dark .fi-simple-layout {
+    background:
+        radial-gradient(60rem 40rem at 0% 0%, rgb(14 165 233 / 0.25), transparent 60%),
+        radial-gradient(50rem 35rem at 100% 100%, rgb(79 70 229 / 0.3), transparent 60%),
+        linear-gradient(135deg, #020617 0%, #0b1f4d 50%, #1e3a8a 100%);
+}
+
+.fi-simple-layout .fi-simple-main {
+    border-radius: 1.25rem;
+    border: 1px solid rgb(255 255 255 / 0.6);
+    box-shadow:
+        0 30px 60px -20px rgb(2 6 23 / 0.55),
+        0 0 0 6px rgb(255 255 255 / 0.08);
+}
+
+.dark .fi-simple-layout .fi-simple-main {
+    border-color: rgb(255 255 255 / 0.1);
+    box-shadow:
+        0 30px 60px -20px rgb(0 0 0 / 0.7),
+        0 0 0 6px rgb(255 255 255 / 0.04);
+}
+
+@media (max-width: 639px) {
+    .fi-simple-layout .fi-simple-main-ctn {
+        padding-inline: 1rem;
+    }
+}
+
+.fi-simple-layout .fi-simple-header .fi-logo {
+    height: 2.25rem !important;
+    margin-bottom: 0.5rem;
+}

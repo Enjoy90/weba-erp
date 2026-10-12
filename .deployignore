@@ -1,0 +1,70 @@
+# Berkas dan folder yang TIDAK BOLEH ikut diunggah ke server.
+# Awali dengan "/" untuk jalur dari akar project; tanpa "/" berlaku di folder mana pun.
+# Akhiri dengan "/" untuk folder.
+
+# Rahasia dan konfigurasi lokal (server punya .env sendiri)
+.env
+.env.*
+/auth.json
+/storage/*.key
+/credentials/
+
+# Dokumentasi, desain, dan catatan pengembangan
+/docs/
+/mockup/
+/.scribe/
+*.md
+*.docx
+~$*
+
+# Tes dan alat pengembangan
+/tests/
+tests/
+/phpunit.xml
+/pint.json
+/serve.bat
+/docker/
+/docker-compose.yml
+/.github/
+/.git/
+.gitattributes
+/.gitignore
+/.editorconfig
+/.codexignore
+/.deployignore
+/.phpunit.cache/
+.phpunit.result.cache
+/.claude/
+/.codex/
+/.agents/
+/.vscode/
+/.idea/
+/.zed/
+/.fleet/
+/playwright-report/
+/test-results/
+
+# Sumber frontend (yang diunggah hanya hasil build di public/build)
+/node_modules/
+/package.json
+/package-lock.json
+/vite.config.js
+/tailwind.config.js
+/postcss.config.js
+/public/hot
+
+# Dipasang ulang di paket: vendor tanpa paket pengembangan
+/vendor/
+
+# Dibuat ulang di server
+/public/storage
+/bootstrap/cache/*.php
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/framework/testing/
+/storage/app/private/*
+/storage/pail/
+/storage/debugbar/
+*.log

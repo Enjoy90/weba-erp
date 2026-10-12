@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 6, Papan Kanban Produksi | Weba ERP</title>
+<style>
+/* Layout: pita judul bergradasi biru dengan toolbar, lalu papan 7 kolom (antre, 5 tahap, siap ditutup) yang bisa digeser ke samping. */
+:root {
+    --font-body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", monospace;
+    --page: #eef3f9;
+    --card: #ffffff;
+    --col: #e4ebf5;
+    --ink-1: #0b1a33;
+    --ink-2: #46546d;
+    --muted: #74829a;
+    --line: #dbe3ee;
+    --blue-950: #061633;
+    --blue-900: #0b2350;
+    --blue-700: #1c5cab;
+    --blue-600: #2a78d6;
+    --blue-50: #ecf3fc;
+    --track: #e5edf7;
+    --critical: #d03b3b; --critical-bg: #fdecec; --critical-ink: #9c2121;
+    --warning: #c98500; --warning-bg: #fff4d9; --warning-ink: #7a5300;
+    --good: #0a8a0a;
+    --st-0: #b7d3f6; --st-1: #86b6ef; --st-2: #5598e7; --st-3: #2a78d6; --st-4: #1c5cab; --st-5: #104281; --st-6: #0d366b;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink-1); font: 14px/1.5 var(--font-body); -webkit-font-smoothing: antialiased; }
+.tnum { font-variant-numeric: tabular-nums; }
+button, input, select { font: inherit; }
+:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 2px; }
+
+.band { color: #eaf2ff; padding: 0 clamp(16px, 2.6vw, 32px) 18px; background: radial-gradient(800px 260px at 95% -30%, rgba(77, 150, 240, .5), transparent 60%), linear-gradient(120deg, var(--blue-950), var(--blue-900) 45%, #154a9c); }
+.topbar { display: flex; align-items: center; gap: 22px; height: 56px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.mark { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: #fff; color: var(--blue-900); font-weight: 800; }
+.nav { display: flex; gap: 4px; flex: 1; overflow-x: auto; }
+.nav a { color: #b8cbe8; text-decoration: none; padding: 6px 11px; border-radius: 8px; white-space: nowrap; }
+.nav a.on { background: rgba(255, 255, 255, .14); color: #fff; font-weight: 600; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #e8f0fc; color: var(--blue-900); font-weight: 700; font-size: 12px; }
+.title { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; padding-top: 14px; }
+.title h1 { margin: 0; font-size: clamp(22px, 2.4vw, 28px); font-weight: 700; }
+.title p { margin: 4px 0 0; color: #b8cbe8; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.search { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .2); border-radius: 10px; padding: 7px 11px; color: #c8d8f0; }
+.search svg { width: 15px; height: 15px; }
+.search input { background: transparent; border: 0; outline: none; color: #fff; width: 190px; }
+.search input::placeholder { color: #9fb6da; }
+.toggle { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .22); background: rgba(255, 255, 255, .08); color: #fff; cursor: pointer; font-weight: 600; }
+.toggle .sw { width: 30px; height: 18px; border-radius: 9px; background: rgba(255, 255, 255, .25); position: relative; transition: background .15s; }
+.toggle .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform .15s; }
+.toggle[aria-pressed="true"] .sw { background: #4f9cf0; }
+.toggle[aria-pressed="true"] .sw::after { transform: translateX(12px); }
+.btn { border: 0; border-radius: 10px; padding: 8px 14px; font-weight: 700; cursor: pointer; background: #fff; color: var(--blue-900); }
+
+.summary { display: flex; flex-wrap: wrap; gap: 8px 22px; padding: 12px clamp(16px, 2.6vw, 32px); background: #fff; border-bottom: 1px solid var(--line); color: var(--ink-2); font-size: 13.5px; }
+.summary b { color: var(--ink-1); }
+.summary .k { display: inline-flex; align-items: center; gap: 7px; }
+.summary .k svg { width: 15px; height: 15px; }
+.summary .crit svg { color: var(--critical); }
+.summary .warn svg { color: var(--warning); }
+
+.board { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(184px, 1fr); gap: 12px; padding: 16px clamp(16px, 2.6vw, 32px) 28px; overflow-x: auto; align-items: start; }
+.col { background: var(--col); border-radius: 14px; padding: 10px; min-height: 160px; }
+.col-head { padding: 6px 6px 10px; }
+.col-head .bar { height: 4px; border-radius: 2px; background: var(--c); margin-bottom: 10px; }
+.col-head .row { display: flex; align-items: baseline; gap: 8px; }
+.col-head h2 { margin: 0; font-size: 14.5px; font-weight: 700; }
+.col-head .count { margin-left: auto; font-size: 12.5px; font-weight: 700; color: var(--ink-2); background: #fff; border-radius: 999px; padding: 0 8px; }
+.col-head .meta { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.cards { display: grid; gap: 8px; }
+.kcard { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(11, 26, 51, .05); cursor: grab; transition: opacity .15s, box-shadow .15s; }
+.kcard:hover { box-shadow: 0 6px 18px rgba(11, 35, 80, .12); }
+.kcard.dim { opacity: .35; }
+.kcard .top { display: flex; align-items: center; gap: 8px; }
+.kcard .rank { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; font-size: 12px; font-weight: 700; background: var(--blue-50); color: var(--blue-700); flex: none; }
+.kcard .rank.hot { background: linear-gradient(140deg, var(--blue-600), var(--blue-900)); color: #fff; }
+.kcard .ref { font-family: var(--font-mono); font-size: 12.5px; }
+.kcard .prod { color: var(--ink-2); font-size: 12.5px; margin: 6px 0 8px; }
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px 2px 6px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.pill svg { width: 12px; height: 12px; }
+.pill.critical { background: var(--critical-bg); color: var(--critical-ink); }
+.pill.critical svg { color: var(--critical); }
+.pill.warning { background: var(--warning-bg); color: var(--warning-ink); }
+.pill.warning svg { color: var(--warning); }
+.pill.plain { background: #f1f4f9; color: var(--ink-2); }
+.prog { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12px; color: var(--ink-2); }
+.prog .b { flex: 1; height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+.prog .b i { display: block; height: 100%; background: var(--blue-600); }
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+.run { white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.run i { width: 7px; height: 7px; border-radius: 50%; background: #c5d1e2; }
+.run.on { color: var(--ink-1); font-weight: 600; }
+.run.on i { background: var(--good); box-shadow: 0 0 0 3px rgba(10, 138, 10, .15); }
+.mat { white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; color: var(--warning-ink); font-weight: 600; }
+.mat svg { width: 13px; height: 13px; color: var(--warning); }
+.empty { padding: 18px 8px; text-align: center; color: var(--muted); font-size: 12.5px; border: 1px dashed #c3d0e2; border-radius: 10px; }
+.note { padding: 0 clamp(16px, 2.6vw, 32px) 24px; color: var(--muted); font-size: 12.5px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/></symbol>
+</svg>
+
+<header class="band">
+    <div class="topbar">
+        <div class="brand"><span class="mark">W</span>Weba ERP</div>
+        <nav class="nav"><a href="#">Dashboard</a><a class="on" href="#">Papan produksi</a><a href="#">Order produksi</a><a href="#">Prioritas SAW</a><a href="#">Inventori</a><a href="#">Laporan</a></nav>
+        <span class="avatar">AW</span>
+    </div>
+    <div class="title">
+        <div>
+            <h1>Papan produksi</h1>
+            <p>Posisi setiap order aktif di lini produksi, diurutkan menurut prioritas SAW di tiap kolom.</p>
+        </div>
+        <div class="tools">
+            <label class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" placeholder="Cari nomor order atau artikel" aria-label="Cari order"></label>
+            <button class="toggle" id="focus" aria-pressed="false"><span class="sw"></span>Hanya yang perlu perhatian</button>
+            <button class="btn">Jalankan SAW</button>
+        </div>
+    </div>
+</header>
+
+<div class="summary" id="summary"></div>
+<main class="board" id="board" aria-label="Papan produksi"></main>
+<p class="note">Mockup tampilan. Kartu bisa diseret antar kolom pada versi aplikasi untuk memindahkan tahap. Data demo PT. Weba International.</p>
+
+<script src="data.js"></script>
+<script>
+(function () {
+    const W = window.WEBA, f = W.fmt;
+    const $ = (id) => document.getElementById(id);
+
+    const columns = [
+        { key: 'queue', title: 'Antre', meta: 'Dikonfirmasi, belum mulai', test: (o) => o.state === 'confirmed' },
+        ...W.stages.map((s, i) => ({ key: s.key, title: s.name, meta: f.one(s.hours) + ' jam tersisa', test: (o) => o.state === 'progress' && o.stageIndex === i })),
+        { key: 'close', title: 'Siap ditutup', meta: 'Produksi selesai', test: (o) => o.state === 'to_close' },
+    ];
+
+    $('summary').innerHTML = `
+        <span><b>${W.kpi.active}</b> order aktif</span>
+        <span class="k crit"><svg><use href="#i-alert"/></svg><b>${W.kpi.late}</b> terlambat</span>
+        <span class="k warn"><svg><use href="#i-clock"/></svg><b>${W.kpi.dueSoon}</b> jatuh tempo 3 hari</span>
+        <span><b>${W.orders.filter((o) => o.running).length}</b> work order sedang berjalan</span>
+        <span>Evaluasi SAW: ${W.evaluation.at}</span>`;
+
+    const pill = (o) => o.isLate
+        ? `<span class="pill critical"><svg><use href="#i-alert"/></svg>${f.daysLeft(o)}</span>`
+        : o.isDueSoon
+            ? `<span class="pill warning"><svg><use href="#i-clock"/></svg>${f.daysLeft(o)}</span>`
+            : `<span class="pill plain">${o.deadline ? 'deadline ' + f.date(o.deadline) : 'tanpa deadline'}</span>`;
+
+    const card = (o) => `
+        <article class="kcard" data-ref="${o.ref}" data-attention="${o.isLate || o.isDueSoon}" data-text="${(o.ref + ' ' + o.product).toLowerCase()}" tabindex="0">
+            <div class="top"><span class="rank ${o.rank <= 5 ? 'hot' : ''}" title="Peringkat SAW">${o.rank}</span><span class="ref">${o.ref}</span></div>
+            <div class="prod">${o.product}, ${f.int(o.qty)} pasang</div>
+            ${pill(o)}
+            <div class="prog"><span class="b"><i style="width:${o.progress}%"></i></span><span class="tnum">${o.progress}%</span></div>
+            <div class="foot">
+                <span class="run ${o.running ? 'on' : ''}"><i></i>${o.running ? 'Sedang berjalan' : (o.state === 'to_close' ? 'Tunggu penutupan' : 'Menunggu')}</span>
+                ${o.material < 100 ? `<span class="mat" title="Ketersediaan bahan"><svg><use href="#i-box"/></svg>Bahan ${o.material}%</span>` : ''}
+            </div>
+        </article>`;
+
+    $('board').innerHTML = columns.map((c, i) => {
+        const list = W.orders.filter(c.test).sort((a, b) => a.rank - b.rank);
+        return `<section class="col" aria-label="${c.title}">
+            <div class="col-head" style="--c:var(--st-${i})">
+                <div class="bar"></div>
+                <div class="row"><h2>${c.title}</h2><span class="count tnum">${list.length}</span></div>
+                <div class="meta">${c.meta}</div>
+            </div>
+            <div class="cards">${list.length ? list.map(card).join('') : '<div class="empty">Tidak ada order di tahap ini</div>'}</div>
+        </section>`;
+    }).join('');
+
+    let focusOn = false;
+    function apply() {
+        const q = $('q').value.trim().toLowerCase();
+        document.querySelectorAll('.kcard').forEach((k) => {
+            const hide = (focusOn && k.dataset.attention !== 'true') || (q && !k.dataset.text.includes(q));
+            k.classList.toggle('dim', hide);
+        });
+    }
+    $('focus').addEventListener('click', () => {
+        focusOn = !focusOn;
+        $('focus').setAttribute('aria-pressed', String(focusOn));
+        apply();
+    });
+    $('q').addEventListener('input', apply);
+})();
+</script>
+</body>
+</html>
